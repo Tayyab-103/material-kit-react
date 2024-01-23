@@ -42,9 +42,9 @@ export const GET_MEMBERS = `${BaseUrl}members`;
 // export const DELETE_EARNING = BaseUrl + "earnings/deleteById"
 // export const UPDATE_EARNING = BaseUrl + "earnings/updateById"
 
-// export const ForgetPasswordUrl = BaseUrl + "forget-password";
-// export const VerifyUrl = ForgetPasswordUrl + "/verify?token=";
-// export const ResetForgotPasswordUrl = ForgetPasswordUrl + "/reset";
+export const ForgetPasswordUrl = `${BaseUrl  }forget-password`;
+export const VerifyUrl = `${ForgetPasswordUrl  }/verify?token=`;
+export const ResetForgotPasswordUrl = `${ForgetPasswordUrl  }/reset`;
 
 // //Rest Password:
 // export const ResetPassword = MembersUrl + "/reset_password";

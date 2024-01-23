@@ -1,4 +1,9 @@
-import { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable import/no-extraneous-dependencies */
+import { toast } from 'react-toastify';
+/* eslint-disable no-unused-vars */
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -11,6 +16,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
 import { users } from 'src/_mock/user';
+import { getMembers } from 'src/store/thunk/member.thunk';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -25,6 +31,12 @@ import { emptyRows, applyFilter, getComparator } from '../utils';
 // ----------------------------------------------------------------------
 
 export default function UserPage() {
+  const dispatch = useDispatch();
+
+  const memberData = useSelector((state) => state.members?.data);
+  // console.log(memberData, "Helloooo====")
+
+  const [members, setMembers] = useState(memberData);
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -36,6 +48,19 @@ export default function UserPage() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  useEffect(() => {
+    // setIsLoading(true);
+    dispatch(getMembers())
+      .then((res) => {
+        setMembers(res.payload);
+        // setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log('error in getting members', err);
+        toast.error('Error in getting members');
+      });
+  }, []);
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -123,8 +148,7 @@ export default function UserPage() {
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
                   { id: 'name', label: 'Name' },
-                  { id: 'company', label: 'Company' },
-                  { id: 'role', label: 'Role' },
+                  { id: 'email', label: 'Email' },
                   { id: 'isVerified', label: 'Verified', align: 'center' },
                   { id: 'status', label: 'Status' },
                   { id: '' },

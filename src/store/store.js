@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { configureStore } from "@reduxjs/toolkit";
-// import authReducer from "./reducer/auth.reducer"; // Import your auth reducer
+
+import authReducer from "./reducer/auth.reducer"; // Import your auth reducer
 // import clientReducer from "./reducer/clinet.reducer";
 import memberReducer from "./reducer/member.reducer";
 // import departmentReducer from "./reducer/department.reducer";
@@ -13,7 +14,7 @@ import memberReducer from "./reducer/member.reducer";
 
 const store = configureStore({
   reducer: {
-    // auth: authReducer,
+    auth: authReducer,
     // department: departmentReducer,
     members: memberReducer,
     // teams: teamsReducer,

@@ -1,47 +1,117 @@
+/* eslint-disable */
+import axios from 'axios';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
+import Card from '@mui/material/Card';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Link from '@mui/material/Link';
+import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
-import InputAdornment from '@mui/material/InputAdornment';
 
 import { useRouter } from 'src/routes/hooks';
 
+import login from 'src/store/thunk/auth.thunk';
 import { bgGradient } from 'src/theme/css';
 
-import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
+import Logo from 'src/components/logo';
+
+
+import { ForgetPasswordUrl } from '../../API/Urls';
+import EmailModal from './EmailModal';
+
 
 // ----------------------------------------------------------------------
 
 export default function LoginView() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const theme = useTheme();
 
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleClick = () => {
-    router.push('/dashboard');
+  const [email, setEmail] = useState('');
+
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (email) => {
+    axios
+      .post(ForgetPasswordUrl, email)
+      .then((res) => {
+        console.log('res', res);
+        toast.success('Kindly check your Email');
+      })
+      .catch((err) => {
+        console.log('Error', err);
+
+        toast.error(err.response.data.message);
+      });
+  };
+
+  // Validations
+  const isValidEmailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email);
+  const emailError = email && !isValidEmailPattern ? 'Please enter a valid email address.' : '';
+
+  const handleSignIn = () => {
+    if (!email) {
+      toast.error('Please enter your email');
+      return;
+    }
+    if (emailError) {
+      toast.error(emailError);
+      return;
+    }
+    if (!password) {
+      toast.error('Please enter your password');
+      return;
+    }
+    if (password.length < 5) {
+      toast.error('Minimum length of password is 5');
+      return;
+    }
+
+    // setLoading(true);
+    dispatch(login({ email, password, navigate}))
+      .then((res) => {
+        // setLoading(false);
+        navigate('/');
+      })
+      .catch((error) => {
+        console.error('Error', error);
+        // toast.error(error?.response?.data?.message || "An error occurred");
+        // setLoading(false);
+      });
   };
 
   const renderForm = (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextField name="email" label="Email address" onChange={(e) => setEmail(e.target.value)} />
 
         <TextField
           name="password"
           label="Password"
           type={showPassword ? 'text' : 'password'}
+          onChange={(e) => setPassword(e.target.value)}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -55,9 +125,11 @@ export default function LoginView() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
-        <Link variant="subtitle2" underline="hover">
+        {/* <Link variant="subtitle2" underline="hover">
           Forgot password?
-        </Link>
+        </Link> */}
+        <Button onClick={() => setIsModalOpen(true)}>Forgot password?</Button>
+        <EmailModal isOpen={isModalOpen} onClose={handleCloseModal} onSubmit={handleSubmit} />
       </Stack>
 
       <LoadingButton
@@ -66,7 +138,8 @@ export default function LoginView() {
         type="submit"
         variant="contained"
         color="inherit"
-        onClick={handleClick}
+        // onClick={handleClick}
+        onClick={handleSignIn}
       >
         Login
       </LoadingButton>
@@ -99,7 +172,7 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">Sign in to Minimal</Typography>
+          <Typography variant="h4">SignIn TDC Dashboard</Typography>
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             Don’t have an account?
@@ -108,7 +181,7 @@ export default function LoginView() {
             </Link>
           </Typography>
 
-          <Stack direction="row" spacing={2}>
+          {/* <Stack direction="row" spacing={2}>
             <Button
               fullWidth
               size="large"
@@ -144,7 +217,7 @@ export default function LoginView() {
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               OR
             </Typography>
-          </Divider>
+          </Divider> */}
 
           {renderForm}
         </Card>
