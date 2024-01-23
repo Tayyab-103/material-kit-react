@@ -41,8 +41,9 @@ export default function LoginView() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-  const navigate = useNavigate();
+  // const navigate = useHistory();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const theme = useTheme();
 
   const router = useRouter();
@@ -93,7 +94,6 @@ export default function LoginView() {
     dispatch(login({ email, password, navigate}))
       .then((res) => {
         // setLoading(false);
-        navigate('/');
       })
       .catch((error) => {
         console.error('Error', error);
@@ -101,6 +101,10 @@ export default function LoginView() {
         // setLoading(false);
       });
   };
+
+  // const handleClick = () => {
+  //   router.push('/dashboard');
+  // };
 
   const renderForm = (
     <>
@@ -140,6 +144,12 @@ export default function LoginView() {
         color="inherit"
         // onClick={handleClick}
         onClick={handleSignIn}
+        sx={{
+          backgroundColor: 'blue',
+          '&:hover': {
+            backgroundColor: 'darkblue',
+          },
+        }}
       >
         Login
       </LoadingButton>
@@ -156,13 +166,13 @@ export default function LoginView() {
         height: 1,
       }}
     >
-      <Logo
+      {/* <Logo
         sx={{
           position: 'fixed',
           top: { xs: 16, md: 24 },
           left: { xs: 16, md: 24 },
         }}
-      />
+      /> */}
 
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
         <Card

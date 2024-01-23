@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState } from 'react';
 
 import Box from '@mui/material/Box';
@@ -11,19 +12,29 @@ import IconButton from '@mui/material/IconButton';
 
 import { account } from 'src/_mock/account';
 
+import { clearUser } from '../../../store/reducer/auth.reducer';
+
+import { useDispatch } from 'react-redux';
+
+import { useNavigate } from 'react-router-dom';
+
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
+  // {
+  //   label: 'Home',
+  //   icon: 'eva:home-fill',
+  // },
+  // {
+  //   label: 'Profile',
+  //   icon: 'eva:person-fill',
+  // },
+  // {
+  //   label: 'Settings',
+  //   icon: 'eva:settings-2-fill',
+  // },
   {
-    label: 'Home',
-    icon: 'eva:home-fill',
-  },
-  {
-    label: 'Profile',
-    icon: 'eva:person-fill',
-  },
-  {
-    label: 'Settings',
+    label: 'Reset Password',
     icon: 'eva:settings-2-fill',
   },
 ];
@@ -31,6 +42,13 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('userData');
+    dispatch(clearUser());
+    navigate('/login');
+  };
   const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {
@@ -105,8 +123,9 @@ export default function AccountPopover() {
         <MenuItem
           disableRipple
           disableTouchRipple
-          onClick={handleClose}
+          // onClick={handleClose}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+          onClick={() => handleLogout()}
         >
           Logout
         </MenuItem>
