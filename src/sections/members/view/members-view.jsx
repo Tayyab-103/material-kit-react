@@ -1,40 +1,37 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable import/no-extraneous-dependencies */
-import { toast } from 'react-toastify';
-/* eslint-disable no-unused-vars */
-import { useState, useEffect } from 'react';
+/* eslint-disable */
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
-import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-
-import { users } from 'src/_mock/user';
+import Typography from '@mui/material/Typography';
 import { getMembers } from 'src/store/thunk/member.thunk';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
+import { users } from 'src/_mock/user';
 
-import TableNoData from '../table-no-data';
-import UserTableRow from '../member-table-row';
-import UserTableHead from '../member-table-head';
+import MemberTableHead from '../member-table-head';
+import MemberTableRow from '../member-table-row';
+import MemberTableToolbar from '../member-table-toolbar';
 import TableEmptyRows from '../table-empty-rows';
-import UserTableToolbar from '../member-table-toolbar';
-import { emptyRows, applyFilter, getComparator } from '../utils';
+import TableNoData from '../table-no-data';
+// import { applyFilter, emptyRows, getComparator } from '../utils';
+import { applyFilter, emptyRows, getComparator } from '../utils';
 
 // ----------------------------------------------------------------------
 
-export default function UserPage() {
+export default function MemberPage() {
   const dispatch = useDispatch();
 
   const memberData = useSelector((state) => state.members?.data);
-  // console.log(memberData, "Helloooo====")
 
   const [members, setMembers] = useState(memberData);
   const [page, setPage] = useState(0);
@@ -72,7 +69,7 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
+      const newSelecteds = members?.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -130,7 +127,7 @@ export default function UserPage() {
       </Stack>
 
       <Card>
-        <UserTableToolbar
+        <MemberTableToolbar
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
@@ -139,7 +136,7 @@ export default function UserPage() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <UserTableHead
+              <MemberTableHead
                 order={order}
                 orderBy={orderBy}
                 rowCount={users.length}
@@ -149,27 +146,42 @@ export default function UserPage() {
                 headLabel={[
                   { id: 'name', label: 'Name' },
                   { id: 'email', label: 'Email' },
-                  { id: 'isVerified', label: 'Verified', align: 'center' },
-                  { id: 'status', label: 'Status' },
-                  { id: '' },
+                  { id: 'role', label: 'Role' },
+                  { id: 'currentSalary', label: 'Current Salary' },
+                  { id: 'department', label: 'Department' },
+                  { id: 'team', label: 'Team' },
+                  { id: 'contactNumber', label: 'Contact Number' },
+                  { id: 'emergencyContactName', label: 'Emergency Contact Name' },
+                  { id: 'emergencyContactNumber', label: 'Emergency Contact Number' },
+                  { id: 'emergencyContactRelation', label: 'Emergency Contact Relation' },
+                  
                 ]}
               />
-              <TableBody>
-                {dataFiltered
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <UserTableRow
-                      key={row.id}
-                      name={row.name}
-                      role={row.role}
-                      status={row.status}
-                      company={row.company}
-                      avatarUrl={row.avatarUrl}
-                      isVerified={row.isVerified}
-                      selected={selected.indexOf(row.name) !== -1}
-                      handleClick={(event) => handleClick(event, row.name)}
-                    />
-                  ))}
+              <TableBody >
+                {members &&
+                  members
+                    ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    ?.map((row) => (
+                      <MemberTableRow
+                        key={row?._id}
+                        name={row?.name}
+                        email={row?.email}
+                        role={row?.role}
+                        currentSalary={row?.currentSalary}
+                        department={row?.department ? row?.department?.name : 'N/A'}
+                        team={
+                          row?.teams && row?.teams.length > 0
+                            ? row?.teams?.map((team) => team?.name).join(', ')
+                            : 'N/A'
+                        }
+                        contactNumber={row?.contactNumber ? row?.contactNumber : 'N/A'}
+                        emergencyContactName={row?.emergencyContactName ?? "N/A"}
+                        emergencyContactNumber={row?.emergencyContactNumber ?? "N/A"}
+                        emergencyContactRelation={row?.emergencyContactRelation ?? "N/A"}
+                        selected={selected.indexOf(row.name) !== -1}
+                        handleClick={(event) => handleClick(event, row.name)}
+                      />
+                    ))}
 
                 <TableEmptyRows
                   height={77}

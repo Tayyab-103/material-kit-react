@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { MembersView } from 'src/sections/members/view';
+import { DepartmentView } from 'src/sections/departments/view';
 
 
 // ----------------------------------------------------------------------
@@ -9,10 +9,10 @@ export default function MemberPage() {
   return (
     <>
       <Helmet>
-        <title>TDC | Members Table </title>
+        <title>TDC | Departments Table </title>
       </Helmet>
 
-      <MembersView />
+      <DepartmentView />
     </>
   );
 }

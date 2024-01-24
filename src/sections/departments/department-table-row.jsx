@@ -17,20 +17,15 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function MemberTableRow({
+export default function DepartmentTableRow({
   selected,
   name,
+  // avatarUrl,
+  departmentHead,
   email,
-  role,
-  currentSalary, 
-  department,
+  // isVerified,
+  // status,
   handleClick,
-  team,
-  contactNumber,
-  emergencyContactName,
-  emergencyContactNumber,
-  emergencyContactRelation
-
 }) {
   const [open, setOpen] = useState(null);
 
@@ -51,29 +46,22 @@ export default function MemberTableRow({
 
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name}
-            //  src={avatarUrl} 
-             />
+            {/* <Avatar alt={name}
+             src={avatarUrl} 
+             /> */}
             <Typography variant="subtitle2" noWrap>
               {name}
             </Typography>
           </Stack>
         </TableCell>
 
+        <TableCell>{departmentHead}</TableCell>
+
         <TableCell>{email}</TableCell>
 
-        <TableCell>{role}</TableCell>
-        <TableCell>{currentSalary}</TableCell>
-        <TableCell>{department}</TableCell>
-        <TableCell>{team}</TableCell>
-        <TableCell>{contactNumber}</TableCell>
-        <TableCell>{emergencyContactName}</TableCell>
-        <TableCell>{emergencyContactNumber}</TableCell>
-        <TableCell>{emergencyContactRelation}</TableCell>
+        {/* <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell>
 
-        {/* <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell> */}
-
-        {/* <TableCell>
+        <TableCell>
           <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
         </TableCell> */}
 
@@ -108,14 +96,13 @@ export default function MemberTableRow({
   );
 }
 
-MemberTableRow.propTypes = {
-  avatarUrl: PropTypes.any,
-  name: PropTypes.string,
-  email: PropTypes.string,
-  role: PropTypes.string,
-  currentSalary: PropTypes.any,
-  department: PropTypes.string,
-  team: PropTypes.string,
+DepartmentTableRow.propTypes = {
+  // avatarUrl: PropTypes.any,
+  departmentHead: PropTypes.string,
   handleClick: PropTypes.func,
+  // isVerified: PropTypes.any,
+  name: PropTypes.any,
+  email: PropTypes.string,
   selected: PropTypes.any,
+  // status: PropTypes.string,
 };

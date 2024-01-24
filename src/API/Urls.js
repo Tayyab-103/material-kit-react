@@ -7,10 +7,10 @@ export const ProjectsUrl = `${BaseUrl}project`;
 export const Add_ProjectUrl = `${ProjectsUrl}/create`;
 export const GET_MEMBERS = `${BaseUrl}members`;
 
-// //Departments:
-// export const GET_DEPARTMENTS = BaseUrl + "department";
-// export const DELETE_DEPARTMENTS = BaseUrl + "department";
-// export const UPDATE_DEPARTMENTS = BaseUrl + "department";
+// Departments:
+export const GET_DEPARTMENTS = `${BaseUrl  }department`;
+export const DELETE_DEPARTMENTS = `${BaseUrl  }department`;
+export const UPDATE_DEPARTMENTS = `${BaseUrl  }department`;
 
 // //Leads:
 // export const GET_LEADS = BaseUrl + "leads";

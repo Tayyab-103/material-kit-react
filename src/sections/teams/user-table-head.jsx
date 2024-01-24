@@ -1,18 +1,17 @@
-/* eslint-disable */
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
+import TableHead from '@mui/material/TableHead';
+import TableCell from '@mui/material/TableCell';
 import TableSortLabel from '@mui/material/TableSortLabel';
 
 import { visuallyHidden } from './utils';
 
 // ----------------------------------------------------------------------
 
-export default function MemberTableHead({
+export default function UserTableHead({
   order,
   orderBy,
   rowCount,
@@ -63,7 +62,7 @@ export default function MemberTableHead({
   );
 }
 
-MemberTableHead.propTypes = {
+UserTableHead.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']),
   orderBy: PropTypes.string,
   rowCount: PropTypes.number,
