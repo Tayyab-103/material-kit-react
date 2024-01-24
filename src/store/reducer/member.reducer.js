@@ -5,7 +5,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { getMembers } from "../thunk/member.thunk";
 
 const initialState = {
-  data: null,
+  data: [],
   loading: false,
   error: null,
 };

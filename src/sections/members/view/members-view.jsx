@@ -1,39 +1,36 @@
 /* eslint-disable */
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Container from '@mui/material/Container';
+import TablePagination from '@mui/material/TablePagination';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
 import Typography from '@mui/material/Typography';
 import { getMembers } from 'src/store/thunk/member.thunk';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
-import { users } from 'src/_mock/user';
 
 import MemberTableHead from '../member-table-head';
 import MemberTableRow from '../member-table-row';
 import MemberTableToolbar from '../member-table-toolbar';
 import TableEmptyRows from '../table-empty-rows';
 import TableNoData from '../table-no-data';
-// import { applyFilter, emptyRows, getComparator } from '../utils';
 import { applyFilter, emptyRows, getComparator } from '../utils';
+
 
 // ----------------------------------------------------------------------
 
 export default function MemberPage() {
   const dispatch = useDispatch();
 
-  const memberData = useSelector((state) => state.members?.data);
+  const members = useSelector((state) => state.members?.data);
 
-  const [members, setMembers] = useState(memberData);
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -45,18 +42,11 @@ export default function MemberPage() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [dataFiltered, setDataFiltered] = useState([]);
 
   useEffect(() => {
     // setIsLoading(true);
     dispatch(getMembers())
-      .then((res) => {
-        setMembers(res.payload);
-        // setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log('error in getting members', err);
-        toast.error('Error in getting members');
-      });
   }, []);
 
   const handleSort = (event, id) => {
@@ -69,7 +59,7 @@ export default function MemberPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = members?.map((n) => n.name);
+      const newSelecteds = members && members?.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -108,11 +98,15 @@ export default function MemberPage() {
     setFilterName(event.target.value);
   };
 
-  const dataFiltered = applyFilter({
-    inputData: users,
-    comparator: getComparator(order, orderBy),
-    filterName,
-  });
+  useEffect(() => {
+    const filteredData = applyFilter({
+      inputData: members,
+      comparator: getComparator(order, orderBy),
+      filterName,
+    });
+
+    setDataFiltered(filteredData);
+  }, [members, order, orderBy, filterName]);
 
   const notFound = !dataFiltered.length && !!filterName;
 
@@ -139,7 +133,7 @@ export default function MemberPage() {
               <MemberTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={users.length}
+                rowCount={members?.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
@@ -158,8 +152,8 @@ export default function MemberPage() {
                 ]}
               />
               <TableBody >
-                {members &&
-                  members
+                {dataFiltered &&
+                  dataFiltered
                     ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     ?.map((row) => (
                       <MemberTableRow
@@ -185,7 +179,7 @@ export default function MemberPage() {
 
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, users.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, members.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -197,7 +191,7 @@ export default function MemberPage() {
         <TablePagination
           page={page}
           component="div"
-          count={users.length}
+          count={members.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}
