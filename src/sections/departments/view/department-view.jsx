@@ -1,30 +1,30 @@
 /* eslint-disable */
-import { toast } from 'react-toastify';
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
-import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
+import Typography from '@mui/material/Typography';
 
-import { users } from 'src/_mock/user';
 import { getDepartments } from 'src/store/thunk/department.thunk';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
-import TableNoData from '../table-no-data';
-import TableEmptyRows from '../table-empty-rows';
-import DepartmentTableRow from '../department-table-row';
 import DepartmentTableHead from '../department-table-head';
+import DepartmentTableRow from '../department-table-row';
 import DepartmentTableToolbar from '../department-table-toolbar';
-import { emptyRows, applyFilter, getComparator } from '../utils';
+import TableEmptyRows from '../table-empty-rows';
+import TableNoData from '../table-no-data';
+import { applyFilter, emptyRows, getComparator } from '../utils';
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +32,6 @@ export default function DepartmentPage() {
   const dispatch = useDispatch();
   const { departments } = useSelector((state) => state.department.data);
 
-  // console.log(departments,"Hellooo======")
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -45,20 +44,11 @@ export default function DepartmentPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      // setIsLoading(true);
-      try {
-        await dispatch(getDepartments());
-        // setIsLoading(false);
-      } catch (error) {
-        // setIsLoading(false);
-        toast.error('Error fetching clients');
-      }
-    };
+  const [dataFiltered, setDataFiltered] = useState([]);
 
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    // setIsLoading(true);
+    dispatch(getDepartments());
   }, []);
 
   const handleSort = (event, id) => {
@@ -71,7 +61,7 @@ export default function DepartmentPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
+      const newSelecteds = departments && departments?.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -110,12 +100,17 @@ export default function DepartmentPage() {
     setFilterName(event.target.value);
   };
 
-  const dataFiltered = applyFilter({
-    inputData: users,
-    comparator: getComparator(order, orderBy),
-    filterName,
-  });
+  useEffect(() => {
+    const filteredData = applyFilter({
+      inputData: departments,
+      comparator: getComparator(order, orderBy),
+      filterName,
+    });
+    // console.log(filteredData," Helooo====a=ascsac===")
+    setDataFiltered(filteredData);
+  }, [departments, order, orderBy, filterName]);
 
+  
   const notFound = !dataFiltered.length && !!filterName;
 
   return (
@@ -123,7 +118,7 @@ export default function DepartmentPage() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Departments </Typography>
 
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Button variant="contained" color="primary" startIcon={<Iconify icon="eva:plus-fill" />}>
           New Department
         </Button>
       </Stack>
@@ -141,7 +136,7 @@ export default function DepartmentPage() {
               <DepartmentTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={users.length}
+                rowCount={departments?.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
@@ -155,8 +150,8 @@ export default function DepartmentPage() {
                 ]}
               />
               <TableBody>
-                {departments &&
-                  departments
+                {dataFiltered &&
+                  dataFiltered
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => (
                       <DepartmentTableRow
@@ -175,7 +170,7 @@ export default function DepartmentPage() {
 
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, users.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, departments?.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -187,7 +182,7 @@ export default function DepartmentPage() {
         <TablePagination
           page={page}
           component="div"
-          count={users.length}
+          count={departments?.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}

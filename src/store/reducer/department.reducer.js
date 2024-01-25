@@ -10,7 +10,7 @@ import {
 
 const initialState = {
   data: {
-    departments: null,
+    departments: [],
   },
   error: null,
   isLoading: false,

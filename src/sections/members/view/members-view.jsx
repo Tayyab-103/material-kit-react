@@ -42,6 +42,7 @@ export default function MemberPage() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
   const [dataFiltered, setDataFiltered] = useState([]);
 
   useEffect(() => {
@@ -115,7 +116,7 @@ export default function MemberPage() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Members</Typography>
 
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Button variant="contained" color="primary" startIcon={<Iconify icon="eva:plus-fill" />}>
           New Member
         </Button>
       </Stack>
