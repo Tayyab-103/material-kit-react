@@ -1,5 +1,6 @@
 /* eslint-disable */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -11,21 +12,25 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { users } from 'src/_mock/user';
+// import { users } from 'src/_mock/user';
+import { getTeams } from 'src/store/thunk/team.thunk';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
 import TableNoData from '../table-no-data';
-import UserTableRow from '../team-table-row';
-import UserTableHead from '../team-table-head';
+import TeamTableRow from '../team-table-row';
+import TeamTableHead from '../team-table-head';
 import TableEmptyRows from '../table-empty-rows';
-import UserTableToolbar from '../team-table-toolbar';
+import TeamTableToolbar from '../team-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
 // ----------------------------------------------------------------------
 
 export default function TeamPage() {
+  const dispatch = useDispatch();
+  const teamData = useSelector((state) => state.teams?.data);
+  // console.log(teamData, 'helloooo=====');
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -38,6 +43,13 @@ export default function TeamPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const [dataFiltered, setDataFiltered] = useState([]);
+
+  useEffect(() => {
+    // setIsLoading(true);
+    dispatch(getTeams());
+  }, []);
+
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
     if (id !== '') {
@@ -48,7 +60,7 @@ export default function TeamPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
+      const newSelecteds = teamData.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -87,11 +99,15 @@ export default function TeamPage() {
     setFilterName(event.target.value);
   };
 
-  const dataFiltered = applyFilter({
-    inputData: users,
-    comparator: getComparator(order, orderBy),
-    filterName,
-  });
+  useEffect(() => {
+    const filteredData = applyFilter({
+      inputData: teamData,
+      comparator: getComparator(order, orderBy),
+      filterName,
+    });
+
+    setDataFiltered(filteredData);
+  }, [teamData, order, orderBy, filterName]);
 
   const notFound = !dataFiltered.length && !!filterName;
 
@@ -106,7 +122,7 @@ export default function TeamPage() {
       </Stack>
 
       <Card>
-        <UserTableToolbar
+        <TeamTableToolbar
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
@@ -115,42 +131,53 @@ export default function TeamPage() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <UserTableHead
+              <TeamTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={users.length}
+                rowCount={teamData.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
                   { id: 'name', label: 'Name' },
-                  { id: 'company', label: 'Company' },
-                  { id: 'role', label: 'Role' },
-                  { id: 'isVerified', label: 'Verified', align: 'center' },
-                  { id: 'status', label: 'Status' },
-                  { id: '' },
+                  { id: 'technology', label: 'Technology' },
+                  { id: 'department', label: 'Department' },
+                  { id: 'team_head', label: 'Team_Head' },
+                  { id: 'members', label: 'Members' },
+                  { id: 'projects', label: 'Projects' },
                 ]}
               />
               <TableBody>
-                {dataFiltered && dataFiltered
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <UserTableRow
-                      key={row.id}
-                      name={row.name}
-                      role={row.role}
-                      status={row.status}
-                      company={row.company}
-                      avatarUrl={row.avatarUrl}
-                      isVerified={row.isVerified}
-                      selected={selected.indexOf(row.name) !== -1}
-                      handleClick={(event) => handleClick(event, row.name)}
-                    />
-                  ))}
+                {dataFiltered &&
+                  dataFiltered
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => (
+                      <TeamTableRow
+                        key={row._id}
+                        name={row.name}
+                        technology={row?.technology}
+                        department={row.department ? row.department.name : 'N/A'}
+                        team_head={row.team_head ? row.team_head.name : 'N/A'}
+                        members={
+                          row.members && row.members.length > 0
+                            ? row.members?.map((member) => member.name).join(', ')
+                            : 'N/A'
+                        }
+                        projects={
+                          row.projects && row.projects.length > 0
+                            ? row.projects?.map((project) => project.name).join(', ')
+                            : 'N/A'
+                        }
+                        // avatarUrl={row.avatarUrl}
+                        // isVerified={row.isVerified}
+                        selected={selected.indexOf(row.name) !== -1}
+                        handleClick={(event) => handleClick(event, row.name)}
+                      />
+                    ))}
 
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, users.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, teamData?.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -162,7 +189,7 @@ export default function TeamPage() {
         <TablePagination
           page={page}
           component="div"
-          count={users.length}
+          count={teamData?.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}

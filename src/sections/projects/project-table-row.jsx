@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
@@ -19,11 +20,24 @@ import Iconify from 'src/components/iconify';
 export default function ProjectTableRow({
   selected,
   name,
-  avatarUrl,
-  company,
-  role,
-  isVerified,
+  team_lead,
+  teams_assigned,
+  members_assigned,
+  client,
   status,
+  start_date,
+  end_date,
+  tech_stack,
+  platform,
+  contract_type,
+  duration,
+  duration_unit,
+  cost,
+  hourly_cost,
+  // avatarUrl,
+  // company,
+  // role,
+  // isVerified,
   handleClick,
 }) {
   const [open, setOpen] = useState(null);
@@ -45,22 +59,35 @@ export default function ProjectTableRow({
 
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl} />
+            {/* <Avatar alt={name} src={avatarUrl} /> */}
             <Typography variant="subtitle2" noWrap>
               {name}
             </Typography>
           </Stack>
         </TableCell>
 
-        <TableCell>{company}</TableCell>
+        <TableCell>{team_lead}</TableCell>
 
-        <TableCell>{role}</TableCell>
-
-        <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell>
-
+        <TableCell>{teams_assigned}</TableCell>
+        <TableCell>{members_assigned}</TableCell>
+        <TableCell>{client}</TableCell>
+        {/* <TableCell>{status}</TableCell> */}
         <TableCell>
-          <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
+          <Label color={(status === 'on-going' && 'error') || 'success'}>{status}</Label>
         </TableCell>
+
+        <TableCell>{start_date}</TableCell>
+        <TableCell>{end_date}</TableCell>
+        <TableCell>{tech_stack}</TableCell>
+        <TableCell>{platform}</TableCell>
+        <TableCell>{contract_type}</TableCell>
+        <TableCell>{duration}</TableCell>
+        <TableCell>{duration_unit}</TableCell>
+        <TableCell>{cost}</TableCell>
+        <TableCell>{hourly_cost}</TableCell>
+
+        {/* <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell> */}
+
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
@@ -94,12 +121,24 @@ export default function ProjectTableRow({
 }
 
 ProjectTableRow.propTypes = {
-  avatarUrl: PropTypes.any,
-  company: PropTypes.any,
-  handleClick: PropTypes.func,
-  isVerified: PropTypes.any,
+  // avatarUrl: PropTypes.any,
   name: PropTypes.any,
-  role: PropTypes.any,
+  team_lead: PropTypes.any,
+  teams_assigned: PropTypes.any,
+  members_assigned: PropTypes.any,
+  client: PropTypes.any,
+  status: PropTypes.any,
+  start_date: PropTypes.any,
+  end_date: PropTypes.any,
+  tech_stack: PropTypes.any,
+  platform: PropTypes.any,
+  contract_type: PropTypes.any,
+  duration: PropTypes.any,
+  duration_unit: PropTypes.any,
+  cost: PropTypes.any,
+  hourly_cost: PropTypes.any,
+  handleClick: PropTypes.func,
+  // isVerified: PropTypes.any,
+  // role: PropTypes.any,
   selected: PropTypes.any,
-  status: PropTypes.string,
 };

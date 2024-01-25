@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
@@ -19,11 +20,14 @@ import Iconify from 'src/components/iconify';
 export default function TeamTableRow({
   selected,
   name,
-  avatarUrl,
-  company,
-  role,
-  isVerified,
-  status,
+  // avatarUrl,
+  team_head,
+  technology,
+  department,
+  members,
+  projects,
+  // isVerified,
+  // status,
   handleClick,
 }) {
   const [open, setOpen] = useState(null);
@@ -45,22 +49,25 @@ export default function TeamTableRow({
 
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl} />
+            {/* <Avatar alt={name} src={avatarUrl} /> */}
             <Typography variant="subtitle2" noWrap>
               {name}
             </Typography>
           </Stack>
         </TableCell>
 
-        <TableCell>{company}</TableCell>
+        <TableCell>{technology}</TableCell>
 
-        <TableCell>{role}</TableCell>
+        <TableCell>{department}</TableCell>
+        <TableCell>{team_head}</TableCell>
+        <TableCell>{members}</TableCell>
+        <TableCell>{projects}</TableCell>
 
-        <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell>
+        {/* <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell>
 
         <TableCell>
           <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
-        </TableCell>
+        </TableCell> */}
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
@@ -94,12 +101,14 @@ export default function TeamTableRow({
 }
 
 TeamTableRow.propTypes = {
-  avatarUrl: PropTypes.any,
-  company: PropTypes.any,
+  // avatarUrl: PropTypes.any,
+  technology: PropTypes.any,
   handleClick: PropTypes.func,
-  isVerified: PropTypes.any,
+  team_head: PropTypes.any,
   name: PropTypes.any,
-  role: PropTypes.any,
+  members: PropTypes.any,
+  projects: PropTypes.any,
+  department: PropTypes.any,
   selected: PropTypes.any,
-  status: PropTypes.string,
+  // status: PropTypes.string,
 };
