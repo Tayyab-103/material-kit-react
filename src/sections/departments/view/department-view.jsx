@@ -1,53 +1,103 @@
 /* eslint-disable */
 
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
+import Typography from '@mui/material/Typography';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-import Typography from '@mui/material/Typography';
+import DialogContentText from '@mui/material/DialogContentText';
 
-import { getDepartments } from 'src/store/thunk/department.thunk';
+import { getMembers } from 'src/store/thunk/member.thunk';
+import { getDepartments, deleteDepartments } from 'src/store/thunk/department.thunk';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
-import DepartmentTableHead from '../department-table-head';
-import DepartmentTableRow from '../department-table-row';
-import DepartmentTableToolbar from '../department-table-toolbar';
-import TableEmptyRows from '../table-empty-rows';
 import TableNoData from '../table-no-data';
-import { applyFilter, emptyRows, getComparator } from '../utils';
-
-// ----------------------------------------------------------------------
+import DepartmentModal from './DepartmentModal';
+import TableEmptyRows from '../table-empty-rows';
+import DepartmentTableRow from '../department-table-row';
+import DepartmentTableHead from '../department-table-head';
+import DepartmentTableToolbar from '../department-table-toolbar';
+import { emptyRows, applyFilter, getComparator } from '../utils';
 
 export default function DepartmentPage() {
   const dispatch = useDispatch();
   const { departments } = useSelector((state) => state.department.data);
 
   const [page, setPage] = useState(0);
-
   const [order, setOrder] = useState('asc');
-
   const [selected, setSelected] = useState([]);
-
   const [orderBy, setOrderBy] = useState('name');
-
   const [filterName, setFilterName] = useState('');
-
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
   const [dataFiltered, setDataFiltered] = useState([]);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState('');
+  const [members, setMembers] = useState([]);
+  const [formProp, setFormProp] = useState({});
+  const [departmentId, setDepartmentId] = useState('');
+
+  const handleModalClick = () => {
+    setIsModalOpen(true);
+    dispatch(getMembers()).then((res) => {
+      setMembers(res.payload);
+    });
+  };
+
+  const handleClickDelete = (id) => {
+    setDeleteId(id);
+    setIsDeleteConfirmationOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      // setIsLoading(true);
+      await dispatch(deleteDepartments(deleteId));
+      await dispatch(getDepartments());
+
+      // Display success toast
+      toast.success('Department Deleted Successfully');
+      setIsDeleteConfirmationOpen(false);
+      // setIsLoading(false);
+    } catch (error) {
+      toast.error('Error Deleting Department');
+      // setIsLoading(false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteConfirmationOpen(false);
+  };
+
+  const handleClickUpdate = (id, value) => {
+    setDepartmentId(id);
+    setFormProp(value);
+    setIsModalOpen(true);
+    dispatch(getMembers()).then((res) => {
+      setMembers(res.payload);
+    });
+  };
+
+  const handleBack = () => {
+    setIsModalOpen(false);
+  };
+
   useEffect(() => {
-    // setIsLoading(true);
     dispatch(getDepartments());
   }, []);
 
@@ -106,19 +156,43 @@ export default function DepartmentPage() {
       comparator: getComparator(order, orderBy),
       filterName,
     });
-    // console.log(filteredData," Helooo====a=ascsac===")
     setDataFiltered(filteredData);
   }, [departments, order, orderBy, filterName]);
 
-  
   const notFound = !dataFiltered.length && !!filterName;
 
   return (
     <Container>
+      <DepartmentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onBack={handleBack}
+        members={members}
+        formProp={formProp}
+        departmentId={departmentId}
+      />
+
+      <Dialog open={isDeleteConfirmationOpen} onClose={handleCancelDelete}>
+        <DialogTitle>Delete Department</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Are you sure you want to delete this department?</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete}>Cancel</Button>
+          <Button color="error" onClick={handleConfirmDelete}>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Departments </Typography>
 
-        <Button variant="contained" color="primary" startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<Iconify icon="eva:plus-fill" />}
+          onClick={handleModalClick}
+        >
           New Department
         </Button>
       </Stack>
@@ -165,6 +239,13 @@ export default function DepartmentPage() {
                         // isVerified={row.isVerified}
                         selected={selected.indexOf(row.name) !== -1}
                         handleClick={(event) => handleClick(event, row.name)}
+                        handleClickDelete={() => handleClickDelete(row._id)}
+                        handleClickUpdate={() =>
+                          handleClickUpdate(row._id, {
+                            name: row.name,
+                            departmentHead: row.departmentHead._id,
+                          })
+                        }
                       />
                     ))}
 

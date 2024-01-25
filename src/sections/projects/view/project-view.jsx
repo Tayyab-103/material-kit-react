@@ -29,7 +29,7 @@ import { emptyRows, applyFilter, getComparator } from '../utils';
 export default function ProjectPage() {
   const dispatch = useDispatch();
   const projectData = useSelector((state) => state.projects?.data);
-  console.log(projectData, "Hello testing=====")
+  // console.log(projectData, "Hello testing=====")
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');

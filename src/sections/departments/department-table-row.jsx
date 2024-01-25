@@ -26,6 +26,8 @@ export default function DepartmentTableRow({
   // isVerified,
   // status,
   handleClick,
+  handleClickDelete,
+  handleClickUpdate
 }) {
   const [open, setOpen] = useState(null);
 
@@ -82,13 +84,13 @@ export default function DepartmentTableRow({
           sx: { width: 140 },
         }}
       >
-        <MenuItem onClick={handleCloseMenu}>
+        <MenuItem onClick={handleClickUpdate}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Edit
         </MenuItem>
 
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
-          <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
+        <MenuItem onClick={handleClickDelete} sx={{ color: 'error.main' }}>
+          <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }}  />
           Delete
         </MenuItem>
       </Popover>
@@ -100,6 +102,8 @@ DepartmentTableRow.propTypes = {
   // avatarUrl: PropTypes.any,
   departmentHead: PropTypes.string,
   handleClick: PropTypes.func,
+  handleClickDelete: PropTypes.func,
+  handleClickUpdate: PropTypes.func,
   // isVerified: PropTypes.any,
   name: PropTypes.any,
   email: PropTypes.string,

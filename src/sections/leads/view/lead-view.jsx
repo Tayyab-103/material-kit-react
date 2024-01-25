@@ -128,7 +128,7 @@ export default function LeadPage() {
                   { id: 'role', label: 'Role' },
                   { id: 'isVerified', label: 'Verified', align: 'center' },
                   { id: 'status', label: 'Status' },
-                  { id: '' },
+                  { id: 'actions', label:'Actions', align: 'center' },
                 ]}
               />
               <TableBody>
