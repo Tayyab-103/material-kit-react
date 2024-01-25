@@ -9,6 +9,9 @@ export const BlogPage = lazy(() => import('src/pages/blog'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const MemberPage = lazy(() => import('src/pages/members'));
 export const DepartmentPage = lazy(() => import('src/pages/department'));
+export const TeamPage = lazy(() => import('src/pages/team'));
+export const ProjectPage = lazy(() => import('src/pages/project'));
+export const LeadPage = lazy(() => import('src/pages/lead'));
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
@@ -30,6 +33,9 @@ export default function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'members', element: <MemberPage /> },
         { path: 'departments', element: <DepartmentPage /> },
+        { path: 'teams', element: <TeamPage /> },
+        { path: 'projects', element: <ProjectPage /> },
+        { path: 'leads', element: <LeadPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
       ],

@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { getTeams } from "../thunk/team.thunk";
 
 const initialState = {
-  data: null,
+  data: [],
   loading: false,
   error: null,
 };

@@ -12,11 +12,11 @@ export const GET_DEPARTMENTS = `${BaseUrl  }department`;
 export const DELETE_DEPARTMENTS = `${BaseUrl  }department`;
 export const UPDATE_DEPARTMENTS = `${BaseUrl  }department`;
 
-// //Leads:
-// export const GET_LEADS = BaseUrl + "leads";
-// export const ADD_LEADS = GET_LEADS + "/create";
-// export const DELETE_LEADS = BaseUrl + "leads";
-// export const UPDATE_LEADS = BaseUrl + "leads";
+// Leads:
+export const GET_LEADS = `${BaseUrl  }leads`;
+export const ADD_LEADS = `${GET_LEADS  }/create`;
+export const DELETE_LEADS = `${BaseUrl  }leads`;
+export const UPDATE_LEADS = `${BaseUrl  }leads`;
 
 // //Clients
 // export const GET_CLIENTS = BaseUrl + "clients";

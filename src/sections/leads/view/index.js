@@ -1,1 +1,1 @@
-export { default as UserView } from './user-view';
+export { default as LeadView } from './lead-view';
