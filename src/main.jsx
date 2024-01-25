@@ -5,8 +5,11 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
 import store  from './store/store'
 import App from './app';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +21,7 @@ root.render(
       <BrowserRouter>
         <Suspense>
           <App />
+          <ToastContainer />
         </Suspense>
       </BrowserRouter>
     </HelmetProvider>

@@ -20,14 +20,12 @@ import Iconify from 'src/components/iconify';
 export default function DepartmentTableRow({
   selected,
   name,
-  // avatarUrl,
   departmentHead,
   email,
-  // isVerified,
-  // status,
   handleClick,
   handleClickDelete,
   handleClickUpdate
+  // avatarUrl,
 }) {
   const [open, setOpen] = useState(null);
 
@@ -104,9 +102,7 @@ DepartmentTableRow.propTypes = {
   handleClick: PropTypes.func,
   handleClickDelete: PropTypes.func,
   handleClickUpdate: PropTypes.func,
-  // isVerified: PropTypes.any,
   name: PropTypes.any,
   email: PropTypes.string,
   selected: PropTypes.any,
-  // status: PropTypes.string,
 };

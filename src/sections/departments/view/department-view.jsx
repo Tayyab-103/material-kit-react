@@ -218,9 +218,7 @@ export default function DepartmentPage() {
                   { id: 'name', label: 'Name' },
                   { id: 'departmentHead', label: 'Department Head' },
                   { id: 'email', label: 'Eamil' },
-                  // { id: 'isVerified', label: 'Verified', align: 'center' },
-                  // { id: 'status', label: 'Status' },
-                  // { id: '' },
+                  { id: 'actions', label: 'Actions', align: 'right' },
                 ]}
               />
               <TableBody>
@@ -233,10 +231,6 @@ export default function DepartmentPage() {
                         name={row.name}
                         departmentHead={row?.departmentHead?.name}
                         email={row?.departmentHead?.email}
-                        // status={row.status}
-                        // company={row.company}
-                        // avatarUrl={row.avatarUrl}
-                        // isVerified={row.isVerified}
                         selected={selected.indexOf(row.name) !== -1}
                         handleClick={(event) => handleClick(event, row.name)}
                         handleClickDelete={() => handleClickDelete(row._id)}
