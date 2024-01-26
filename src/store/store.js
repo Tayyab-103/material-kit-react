@@ -7,7 +7,7 @@ import leadReducer from "./reducer/lead.reducer";
 import memberReducer from "./reducer/member.reducer";
 import projectsReducer from "./reducer/projects.reducer";
 import teamsReducer from "./reducer/teams.reducer";
-// import clientReducer from "./reducer/clinet.reducer";
+import clientReducer from "./reducer/clinet.reducer";
 // import taskReducer from "./reducer/task.reducer";
 // import payrollReducer from "./reducer/payroll.reducer";
 // import earningReducer from "./reducer/earning.reducer";
@@ -20,7 +20,7 @@ const store = configureStore({
     teams: teamsReducer,
     projects: projectsReducer,
     lead: leadReducer,
-    // client: clientReducer,
+    client: clientReducer,
     // task: taskReducer,
     // payroll: payrollReducer,
     // earning: earningReducer,

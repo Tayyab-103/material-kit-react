@@ -39,6 +39,9 @@ export default function ProjectTableRow({
   // role,
   // isVerified,
   handleClick,
+  handleClickDelete,
+  handleClickUpdate
+
 }) {
   const [open, setOpen] = useState(null);
 
@@ -106,12 +109,12 @@ export default function ProjectTableRow({
           sx: { width: 140 },
         }}
       >
-        <MenuItem onClick={handleCloseMenu}>
+        <MenuItem onClick={handleClickUpdate}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Edit
         </MenuItem>
 
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleClickDelete} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Delete
         </MenuItem>
@@ -138,6 +141,8 @@ ProjectTableRow.propTypes = {
   cost: PropTypes.any,
   hourly_cost: PropTypes.any,
   handleClick: PropTypes.func,
+  handleClickUpdate: PropTypes.func,
+  handleClickDelete: PropTypes.func,
   // isVerified: PropTypes.any,
   // role: PropTypes.any,
   selected: PropTypes.any,
