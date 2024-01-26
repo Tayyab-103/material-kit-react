@@ -153,7 +153,7 @@ const TeamModal = ({ isOpen, onClose, teams, onSave, editData, edit }) => {
           {isUpdateMode ? 'Edit Team' : 'Add Team'}
         </Typography>
         <Formik
-          initialValues={initialData}
+          initialValues={teamData}
           validationSchema={teamValidationSchema}
           onSubmit={handleSubmit}
         >

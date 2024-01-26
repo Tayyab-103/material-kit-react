@@ -208,7 +208,7 @@ const ProjectModal = ({ isOpen, onClose, onSave, editData, edit }) => {
           {isUpdateMode ? 'Edit Project' : 'Add Project'}
         </Typography>
         <Formik
-          initialValues={initialData}
+          initialValues={projectData}
           validationSchema={projectValidationSchema}
           onSubmit={handleSubmit}
         >

@@ -1,24 +1,24 @@
 /* eslint-disable */
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
 import { toast } from 'react-toastify';
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Form, Field, Formik, ErrorMessage } from 'formik';
 
 import {
-  Modal,
   Button,
-  FormLabel,
-  TextField,
-  Typography,
   FormControl,
+  FormLabel,
   Select as MUISelect,
-  MenuItem
+  MenuItem,
+  Modal,
+  TextField,
+  Typography
 } from '@mui/material';
 
 import { memberValidationSchema } from '../../../schema';
-import { getTeams } from '../../../store/thunk/team.thunk';
 import { getDepartments } from '../../../store/thunk/department.thunk';
+import { getTeams } from '../../../store/thunk/team.thunk';
 
 const MemberModal = ({ isOpen, onClose, members, onSave, editData, edit }) => {
   const dispatch = useDispatch();
@@ -45,7 +45,7 @@ const MemberModal = ({ isOpen, onClose, members, onSave, editData, edit }) => {
   const departmentData = useSelector((state) => state.department?.data?.departments);
   const [departments, setDepartments] = useState(departmentData);
   const [selected, setSelected] = useState([]);
-
+  // console.log("edit",editData);
   const handleModalClose = () => {
     onClose();
   };
@@ -94,6 +94,7 @@ const MemberModal = ({ isOpen, onClose, members, onSave, editData, edit }) => {
         department: editData?.department?._id || '',
         teams: editData?.teams?.map((team) => team._id) || '',
       }));
+      // console.log("data",memberData);
     } else {
       setMemberData(initialData);
     }
@@ -141,7 +142,7 @@ const MemberModal = ({ isOpen, onClose, members, onSave, editData, edit }) => {
           {isUpdateMode ? 'Edit Member' : 'Add Member'}
         </Typography>
         <Formik
-          initialValues={initialData}
+          initialValues={memberData}
           validationSchema={memberValidationSchema}
           onSubmit={handleSubmit}
         >

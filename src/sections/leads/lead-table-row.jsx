@@ -1,8 +1,8 @@
+/* eslint-disable */
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
@@ -19,12 +19,18 @@ import Iconify from 'src/components/iconify';
 export default function LeadTableRow({
   selected,
   name,
-  avatarUrl,
-  company,
-  role,
-  isVerified,
-  status,
+  date,
+  salesTeamMember,
+  client,
+  appointment,
+  leadStatus,
+  linkJobApplied,
+  jobDescription,
+  sentDescription,
+  call,
   handleClick,
+  handleClickDelete,
+  handleClickUpdate,
 }) {
   const [open, setOpen] = useState(null);
 
@@ -43,23 +49,48 @@ export default function LeadTableRow({
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
 
-        <TableCell component="th" scope="row" padding="none">
+        <TableCell component="th" scope="row" padding="5">
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl} />
+            {/* <Avatar alt={name} src={avatarUrl} /> */}
             <Typography variant="subtitle2" noWrap>
               {name}
             </Typography>
           </Stack>
         </TableCell>
 
-        <TableCell>{company}</TableCell>
+        <TableCell component="th" scope="row" padding="none">
+          <Stack direction="row" alignItems="center" spacing={2}>
+            {/* <Avatar alt={name} src={avatarUrl} /> */}
+            <Typography variant="subtitle3" noWrap>
+              {date}
+            </Typography>
+          </Stack>
+        </TableCell>
 
-        <TableCell>{role}</TableCell>
+        {/* <TableCell>{date}</TableCell> */}
 
-        <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell>
+        <TableCell>{salesTeamMember}</TableCell>
+        <TableCell>{client}</TableCell>
+        <TableCell>{appointment}</TableCell>
 
         <TableCell>
-          <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
+          <Label
+            color={leadStatus === 'HOT' ? 'error' : leadStatus === 'COLD' ? 'info' : 'success'}
+          >
+            {leadStatus}
+          </Label>
+        </TableCell>
+        {/* <TableCell>{leadStatus}</TableCell> */}
+        <TableCell>{linkJobApplied}</TableCell>
+        <TableCell>{jobDescription}</TableCell>
+        <TableCell>{sentDescription}</TableCell>
+        <TableCell component="th" scope="row" padding="none">
+          <Stack direction="row" alignItems="center" spacing={2}>
+            {/* <Avatar alt={name} src={avatarUrl} /> */}
+            <Typography variant="subtitle3" noWrap>
+              {call}
+            </Typography>
+          </Stack>
         </TableCell>
 
         <TableCell align="right">
@@ -79,12 +110,12 @@ export default function LeadTableRow({
           sx: { width: 140 },
         }}
       >
-        <MenuItem onClick={handleCloseMenu}>
+        <MenuItem onClick={handleClickUpdate}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Edit
         </MenuItem>
 
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleClickDelete} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Delete
         </MenuItem>
@@ -94,12 +125,19 @@ export default function LeadTableRow({
 }
 
 LeadTableRow.propTypes = {
-  avatarUrl: PropTypes.any,
-  company: PropTypes.any,
+  // avatarUrl: PropTypes.any,
   handleClick: PropTypes.func,
-  isVerified: PropTypes.any,
+  handleClickUpdate: PropTypes.func,
+  handleClickDelete: PropTypes.func,
   name: PropTypes.any,
-  role: PropTypes.any,
+  date: PropTypes.any,
+  salesTeamMember: PropTypes.any,
+  client: PropTypes.any,
+  linkJobApplied: PropTypes.any,
+  jobDescription: PropTypes.any,
+  sentDescription: PropTypes.any,
+  appointment: PropTypes.any,
+  call: PropTypes.any,
+  leadStatus: PropTypes.any,
   selected: PropTypes.any,
-  status: PropTypes.string,
 };
