@@ -37,7 +37,7 @@ const MemberModal = ({ isOpen, onClose, members, onSave, editData, edit }) => {
     emergencyContactNumber: editData?.emergencyContactNumber || '',
     emergencyContactRelation: editData?.emergencyContactRelation || '',
   };
-  console.log(initialData, 'Helloosncnsncxns========');
+  // console.log(initialData, 'Helloosncnsncxns========');
 
   const [memberData, setMemberData] = useState(initialData);
   const teamData = useSelector((state) => state.teams?.data);
