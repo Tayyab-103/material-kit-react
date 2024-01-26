@@ -1,53 +1,112 @@
 /* eslint-disable */
-import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import Container from '@mui/material/Container';
-import TablePagination from '@mui/material/TablePagination';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
 import Typography from '@mui/material/Typography';
-import { getMembers } from 'src/store/thunk/member.thunk';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import TableContainer from '@mui/material/TableContainer';
+import TablePagination from '@mui/material/TablePagination';
+import DialogContentText from '@mui/material/DialogContentText';
+
+import { addMember, editMember, getMembers, deleteMember } from 'src/store/thunk/member.thunk';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
-import MemberTableHead from '../member-table-head';
-import MemberTableRow from '../member-table-row';
-import MemberTableToolbar from '../member-table-toolbar';
-import TableEmptyRows from '../table-empty-rows';
+import MemberModal from './MemberModal';
 import TableNoData from '../table-no-data';
-import { applyFilter, emptyRows, getComparator } from '../utils';
-
+import MemberTableRow from '../member-table-row';
+import TableEmptyRows from '../table-empty-rows';
+import MemberTableHead from '../member-table-head';
+import MemberTableToolbar from '../member-table-toolbar';
+import { emptyRows, applyFilter, getComparator } from '../utils';
 
 // ----------------------------------------------------------------------
 
 export default function MemberPage() {
   const dispatch = useDispatch();
-
-  const members = useSelector((state) => state.members?.data);
+  const memberData = useSelector((state) => state.members?.data);
 
   const [page, setPage] = useState(0);
-
   const [order, setOrder] = useState('asc');
-
   const [selected, setSelected] = useState([]);
-
   const [orderBy, setOrderBy] = useState('name');
-
   const [filterName, setFilterName] = useState('');
-
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
   const [dataFiltered, setDataFiltered] = useState([]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
+  const [members, setMembers] = useState(memberData);
+  const [memberEditData, setMemberEditData] = useState(null);
+  // const [isLoading, setIsLoading] = useState(true);
+  const [deleteId, setDeleteId] = useState('');
+
+  const handleModalClick = () => {
+    setMemberEditData(null);
+    setIsModalOpen(true);
+  };
+
+  const handleSaveMember = (memberData) => {
+    dispatch(addMember({ memberData })).then((res) => {
+      dispatch(getMembers()).then((res) => {
+        setMembers(res.payload);
+        toast.success('Member Added Succesfully');
+      });
+    });
+  };
+
+  const handleClickDelete = (id) => {
+    setDeleteId(id);
+    setIsDeleteConfirmationOpen(true);
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteConfirmationOpen(false);
+  };
+
+  const handleConfirmDelete = () => {
+    handleCancelDelete();
+    dispatch(deleteMember(deleteId)).then((res) => {
+      dispatch(getMembers()).then((res) => {
+        setMembers(res.payload);
+        toast.success('Member Deleted Succesfully');
+      });
+    });
+  };
+
+  const triggerEditMember = (rowData) => {
+    setMemberEditData(rowData);
+    // setIndexOfRow(index);
+    setIsModalOpen(true);
+  };
+
+  const handleEditMember = (memberData) => {
+    dispatch(editMember(memberData)).then((res) => {
+      dispatch(getMembers()).then((res) => {
+        setMembers(res.payload);
+        toast.success('Member Edited Succesfully');
+      });
+    });
+  };
+
+  const handleBack = () => {
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     // setIsLoading(true);
-    dispatch(getMembers())
+    dispatch(getMembers());
   }, []);
 
   const handleSort = (event, id) => {
@@ -60,7 +119,7 @@ export default function MemberPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = members && members?.map((n) => n.name);
+      const newSelecteds = memberData && memberData?.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -101,22 +160,49 @@ export default function MemberPage() {
 
   useEffect(() => {
     const filteredData = applyFilter({
-      inputData: members,
+      inputData: memberData,
       comparator: getComparator(order, orderBy),
       filterName,
     });
 
     setDataFiltered(filteredData);
-  }, [members, order, orderBy, filterName]);
+  }, [memberData, order, orderBy, filterName]);
 
   const notFound = !dataFiltered.length && !!filterName;
 
   return (
     <Container>
+      <MemberModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onBack={handleBack}
+        members={members}
+        onSave={handleSaveMember}
+        editData={memberEditData}
+        edit={handleEditMember}
+      />
+
+      <Dialog open={isDeleteConfirmationOpen} onClose={handleCancelDelete}>
+        <DialogTitle>Delete Department</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Are you sure you want to delete this department?</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete}>Cancel</Button>
+          <Button color="error" onClick={handleConfirmDelete}>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Members</Typography>
 
-        <Button variant="contained" color="primary" startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<Iconify icon="eva:plus-fill" />}
+          onClick={handleModalClick}
+        >
           New Member
         </Button>
       </Stack>
@@ -134,7 +220,7 @@ export default function MemberPage() {
               <MemberTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={members?.length}
+                rowCount={memberData?.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
@@ -149,10 +235,10 @@ export default function MemberPage() {
                   { id: 'emergencyContactName', label: 'Emergency Contact Name' },
                   { id: 'emergencyContactNumber', label: 'Emergency Contact Number' },
                   { id: 'emergencyContactRelation', label: 'Emergency Contact Relation' },
-                  
+                  { id: 'actions', label: 'Actions' },
                 ]}
               />
-              <TableBody >
+              <TableBody>
                 {dataFiltered &&
                   dataFiltered
                     ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -170,17 +256,19 @@ export default function MemberPage() {
                             : 'N/A'
                         }
                         contactNumber={row?.contactNumber ? row?.contactNumber : 'N/A'}
-                        emergencyContactName={row?.emergencyContactName ?? "N/A"}
-                        emergencyContactNumber={row?.emergencyContactNumber ?? "N/A"}
-                        emergencyContactRelation={row?.emergencyContactRelation ?? "N/A"}
+                        emergencyContactName={row?.emergencyContactName ?? 'N/A'}
+                        emergencyContactNumber={row?.emergencyContactNumber ?? 'N/A'}
+                        emergencyContactRelation={row?.emergencyContactRelation ?? 'N/A'}
                         selected={selected.indexOf(row.name) !== -1}
                         handleClick={(event) => handleClick(event, row.name)}
+                        handleClickUpdate={() => triggerEditMember(row)}
+                        handleClickDelete={() => handleClickDelete(row._id)}
                       />
                     ))}
 
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, members.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, memberData.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -192,7 +280,7 @@ export default function MemberPage() {
         <TablePagination
           page={page}
           component="div"
-          count={members.length}
+          count={memberData.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}

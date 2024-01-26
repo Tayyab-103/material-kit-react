@@ -44,6 +44,7 @@ export const addMember = createAsyncThunk('data/addMembers', async ({ memberData
 });
 
 export const editMember = createAsyncThunk('data/editMembers', async (memberData) => {
+  // const data = {...memberData, teams: memberData.teams.map((team)=> team._id)}
   const userData = JSON.parse(localStorage.getItem('userData'));
   try {
     const response = await axios.patch(`${MembersUrl}/${memberData._id}`, memberData, {
