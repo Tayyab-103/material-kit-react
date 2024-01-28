@@ -18,28 +18,26 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import Typography from '@mui/material/Typography';
 
-import { getClients } from 'src/store/thunk/client.thunk';
-import { deleteLeads, getLeads } from 'src/store/thunk/lead.thunk';
-import { getMembers } from 'src/store/thunk/member.thunk';
+import { deleteClients, getClients } from 'src/store/thunk/client.thunk';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
-import LeadTableHead from '../lead-table-head';
-import LeadTableRow from '../lead-table-row';
-import LeadTableToolbar from '../lead-table-toolbar';
+import ClientTableHead from '../client-table-head';
+import ClientTableRow from '../client-table-row';
+import ClientTableToolbar from '../client-table-toolbar';
 import TableEmptyRows from '../table-empty-rows';
 import TableNoData from '../table-no-data';
 import { applyFilter, emptyRows, getComparator } from '../utils';
-import LeadModal from './LeadModal';
+import ClientModal from './ClientModal';
 import Loader from 'src/components/loader/Loader';
 
 // ----------------------------------------------------------------------
 
-export default function LeadPage() {
+export default function ClientPage() {
   const dispatch = useDispatch();
-  const { leads } = useSelector((state) => state.lead.data);
-  // console.log(leads, ' Hello==== LeadsData');
+  const { clients } = useSelector((state) => state.client.data);
+  // console.log(clients, ' Hello==== LeadsData');
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -51,22 +49,14 @@ export default function LeadPage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
-  const [members, setMembers] = useState([]);
-  const [clients, setClients] = useState([]);
-  const [leadProp, setLeadProp] = useState({});
-  const [leadId, setLeadId] = useState('');
+  const [clientProp, setClientProp] = useState({});
+  const [clientId, setClientId] = useState("");
   const [deleteId, setDeleteId] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
+
   const handleModalClick = () => {
     setIsModalOpen(true);
-    dispatch(getMembers()).then((res) => {
-      setMembers(res.payload);
-    });
-
-    dispatch(getClients()).then((res) => {
-      setClients(res.payload);
-    });
   };
 
   const handleBack = () => {
@@ -81,18 +71,13 @@ export default function LeadPage() {
   const handleConfirmDelete = async () => {
     try {
       setIsLoading(true);
-      await dispatch(deleteLeads(deleteId));
-      await dispatch(getLeads());
-
-      // Display success toast
-      toast.success('Lead Deleted Successfully');
-
-      // Close confirmation modal
+      await dispatch(deleteClients(deleteId));
+      await dispatch(getClients());
+      toast.success("Client Deleted Successfully");
       setIsDeleteConfirmationOpen(false);
       setIsLoading(false);
     } catch (error) {
-      // Display error toast
-      toast.error('Error Deleting Lead');
+      toast.error("Error Deleting Client");
       setIsLoading(false);
     }
   };
@@ -102,35 +87,25 @@ export default function LeadPage() {
   };
 
   const handleClickUpdate = (id, value) => {
-    setLeadId(id);
-    setLeadProp(value);
+    setClientId(id);
+    setClientProp(value);
     setIsModalOpen(true);
-    dispatch(getMembers()).then((res) => {
-      setMembers(res.payload);
-    });
-    dispatch(getClients()).then((res) => {
-      setClients(res.payload);
-    });
   };
 
-  // useEffect(() => {
-  //   dispatch(getLeads());
-  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        await dispatch(getLeads());
+        await dispatch(getClients())
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
-        toast.error('Error fetching clients');
+        toast.error("Error fetching clients");
       }
     };
 
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSort = (event, id) => {
@@ -143,7 +118,7 @@ export default function LeadPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = leads.map((n) => n.name);
+      const newSelecteds = clients.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -184,38 +159,28 @@ export default function LeadPage() {
 
   useEffect(() => {
     const filteredData = applyFilter({
-      inputData: leads,
+      inputData: clients,
       comparator: getComparator(order, orderBy),
       filterName,
     });
     setDataFiltered(filteredData);
-  }, [leads, order, orderBy, filterName]);
+  }, [clients, order, orderBy, filterName]);
 
   const notFound = !dataFiltered.length && !!filterName;
 
-  function formatDateString(dateString) {
-    const date = new Date(dateString);
-    const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}/
-                        ${date.getDate().toString().padStart(2, '0')}/
-                        ${date.getFullYear()}`;
-
-    return formattedDate;
-  }
   return (
     <Container>
-      <LeadModal
+      <ClientModal
         isOpen={isModalOpen}
-        members={members}
-        clients={clients}
         onClose={() => setIsModalOpen(false)}
         onBack={handleBack}
-        leadProp={leadProp}
-        leadId={leadId}
+        clientProp={clientProp}
+        clientId={clientId}
       />
       <Dialog open={isDeleteConfirmationOpen} onClose={handleCancelDelete}>
-        <DialogTitle>Delete Lead</DialogTitle>
+        <DialogTitle>Delete Client</DialogTitle>
         <DialogContent>
-          <DialogContentText>Are you sure you want to delete this lead?</DialogContentText>
+          <DialogContentText>Are you sure you want to delete this client?</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelDelete}>Cancel</Button>
@@ -225,7 +190,7 @@ export default function LeadPage() {
         </DialogActions>
       </Dialog>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Leads</Typography>
+        <Typography variant="h4">Clients</Typography>
 
         <Button
           variant="contained"
@@ -233,12 +198,12 @@ export default function LeadPage() {
           startIcon={<Iconify icon="eva:plus-fill" />}
           onClick={handleModalClick}
         >
-          New Lead
+          New Client
         </Button>
       </Stack>
 
       <Card>
-        <LeadTableToolbar
+        <ClientTableToolbar
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
@@ -247,24 +212,25 @@ export default function LeadPage() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <LeadTableHead
+              <ClientTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={leads.length}
+                rowCount={clients.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
                   { id: 'name', label: 'Name' },
-                  { id: 'date', label: 'Date' },
-                  { id: 'salesTeamMember', label: 'Sales TeamMember' },
-                  { id: 'client', label: 'Client' },
-                  { id: 'appointment', label: 'Appointment' },
-                  { id: 'leadStatus', label: 'Lead Status' },
-                  { id: 'linkJobApplied', label: 'Link Job Applied' },
-                  { id: 'jobDescription', label: 'Job Description' },
-                  { id: 'sentDescription', label: 'sentDescription' },
-                  { id: 'call', label: 'Call' },
+                  { id: 'email', label: 'Email' },
+                  { id: 'contactNumber', label: 'Contact Number' },
+                  { id: 'platform', label: 'Platform' },
+                  { id: 'regionLocated', label: 'Region Located' },
+                  { id: 'isActive', label: 'IsActive' },
+                  { id: 'isOnBoarded', label: 'IsOn Boarded' },
+                  { id: 'emailSecondary', label: 'Email Secondary' },
+                  { id: 'dateContacted', label: 'Date Contacted' },
+                  { id: 'contactPlatformLink1', label: 'Contact Platform Link1' },
+                  { id: 'contactPlatformLink2', label: 'Contact Platform Link2' },
                   { id: 'actions', label: 'Actions', align: 'center' },
                 ]}
               />
@@ -276,33 +242,38 @@ export default function LeadPage() {
                     dataFiltered
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row) => (
-                        <LeadTableRow
+                        <ClientTableRow
                           key={row._id}
                           name={row.name}
-                          date={formatDateString(row?.date)}
-                          salesTeamMember={row?.salesTeamMember?.name ?? 'N/A'}
-                          client={row?.client?.name ?? 'N/A'}
-                          appointment={formatDateString(row?.appointment)}
-                          leadStatus={row?.leadStatus}
+                          email={row?.email}
+                          contactNumber={row?.contactNumber}
+                          platform={row?.platform}
+                          regionLocated={row?.regionLocated}
+                          isActive={row?.isActive ? "True" : "False"}
                           linkJobApplied={row?.linkJobApplied}
                           jobDescription={row?.jobDescription}
                           sentDescription={row?.sentDescription}
-                          call={formatDateString(row?.call)}
+                          isOnBoarded={row?.isOnBoarded ? "True" : "False"}
+                          emailSecondary={row?.emailSecondary}
+                          dateContacted={new Date(
+                            row?.dateContacted
+                          ).toLocaleDateString()}
+                          contactPlatformLink1={row?.contactPlatformLink1}
+                          contactPlatformLink2={row?.contactPlatformLink2}
                           selected={selected.indexOf(row.name) !== -1}
                           handleClick={(event) => handleClick(event, row.name)}
                           handleClickDelete={() => handleClickDelete(row._id)}
                           handleClickUpdate={() =>
                             handleClickUpdate(row._id, {
-                              name: row?.name,
-                              date: row?.date,
-                              salesTeamMember: row?.salesTeamMember?._id,
-                              client: row?.client?._id,
-                              linkJobApplied: row?.linkJobApplied,
-                              jobDescription: row?.jobDescription,
-                              sentDescription: row?.sentDescription,
-                              appointment: row?.appointment,
-                              call: row?.call,
-                              leadStatus: row?.leadStatus,
+                              name: row.name,
+                              email: row.email,
+                              emailSecondary: row.emailSecondary,
+                              contactNumber: row.contactNumber,
+                              platform: row.platform,
+                              dateContacted: row.dateContacted,
+                              regionLocated: row.regionLocated,
+                              contactPlatformLink1: row.contactPlatformLink1,
+                              contactPlatformLink2: row.contactPlatformLink2,
                             })
                           }
                         />
@@ -310,7 +281,7 @@ export default function LeadPage() {
 
                   <TableEmptyRows
                     height={77}
-                    emptyRows={emptyRows(page, rowsPerPage, leads.length)}
+                    emptyRows={emptyRows(page, rowsPerPage, clients.length)}
                   />
 
                   {notFound && <TableNoData query={filterName} />}
@@ -323,7 +294,7 @@ export default function LeadPage() {
         <TablePagination
           page={page}
           component="div"
-          count={leads.length}
+          count={clients.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}

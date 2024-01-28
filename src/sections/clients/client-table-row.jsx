@@ -1,30 +1,37 @@
-import { useState } from 'react';
+/* eslint-disable */
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Popover from '@mui/material/Popover';
-import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
-import MenuItem from '@mui/material/MenuItem';
-import TableCell from '@mui/material/TableCell';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import Popover from '@mui/material/Popover';
+import Stack from '@mui/material/Stack';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 
-import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
+
 
 // ----------------------------------------------------------------------
 
-export default function UserTableRow({
+export default function ClientTableRow({
   selected,
   name,
-  avatarUrl,
-  company,
-  role,
-  isVerified,
-  status,
+  email,
+  contactNumber,
+  platform,
+  regionLocated,
+  isActive,
+  isOnBoarded,
+  emailSecondary,
+  dateContacted,
+  contactPlatformLink1,
+  contactPlatformLink2,
   handleClick,
+  handleClickDelete,
+  handleClickUpdate,
 }) {
   const [open, setOpen] = useState(null);
 
@@ -43,24 +50,26 @@ export default function UserTableRow({
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
         </TableCell>
 
-        <TableCell component="th" scope="row" padding="none">
+        <TableCell component="th" scope="row" sx={{ padding: 3 }}>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl} />
+            {/* <Avatar alt={name} src={avatarUrl} /> */}
             <Typography variant="subtitle2" noWrap>
               {name}
             </Typography>
           </Stack>
         </TableCell>
 
-        <TableCell>{company}</TableCell>
+        <TableCell>{email}</TableCell>
 
-        <TableCell>{role}</TableCell>
-
-        <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell>
-
-        <TableCell>
-          <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
-        </TableCell>
+        <TableCell>{contactNumber}</TableCell>
+        <TableCell>{platform}</TableCell>
+        <TableCell>{regionLocated}</TableCell>
+        <TableCell>{isActive}</TableCell>
+        <TableCell>{isOnBoarded}</TableCell>
+        <TableCell>{emailSecondary}</TableCell>
+        <TableCell>{dateContacted}</TableCell>
+        <TableCell>{contactPlatformLink1}</TableCell>
+        <TableCell>{contactPlatformLink2}</TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
@@ -79,12 +88,12 @@ export default function UserTableRow({
           sx: { width: 140 },
         }}
       >
-        <MenuItem onClick={handleCloseMenu}>
+        <MenuItem onClick={handleClickUpdate}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Edit
         </MenuItem>
 
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleClickDelete} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Delete
         </MenuItem>
@@ -93,13 +102,21 @@ export default function UserTableRow({
   );
 }
 
-UserTableRow.propTypes = {
-  avatarUrl: PropTypes.any,
-  company: PropTypes.any,
+ClientTableRow.propTypes = {
+  // avatarUrl: PropTypes.any,
   handleClick: PropTypes.func,
-  isVerified: PropTypes.any,
+  handleClickUpdate: PropTypes.func,
+  handleClickDelete: PropTypes.func,
   name: PropTypes.any,
-  role: PropTypes.any,
+  email: PropTypes.any,
+  contactNumber: PropTypes.any,
+  platform: PropTypes.any,
+  regionLocated: PropTypes.any,
+  isActive: PropTypes.any,
+  isOnBoarded: PropTypes.any,
+  emailSecondary: PropTypes.any,
+  dateContacted: PropTypes.any,
+  contactPlatformLink1: PropTypes.any,
+  contactPlatformLink2: PropTypes.any,
   selected: PropTypes.any,
-  status: PropTypes.string,
 };

@@ -61,11 +61,14 @@ export default function LeadTableRow({
 
           <TableCell component="th" scope="row" padding="none">
             <Stack direction="row" alignItems="center" spacing={2}>
+              {/* <Avatar alt={name} src={avatarUrl} /> */}
               <Typography variant="subtitle3" noWrap>
                 {date}
               </Typography>
             </Stack>
           </TableCell>
+
+          {/* <TableCell>{date}</TableCell> */}
 
           <TableCell>{salesTeamMember}</TableCell>
           <TableCell>{client}</TableCell>
@@ -78,6 +81,7 @@ export default function LeadTableRow({
               {leadStatus}
             </Label>
           </TableCell>
+          {/* <TableCell>{leadStatus}</TableCell> */}
           <TableCell>{linkJobApplied}</TableCell>
           <TableCell>{jobDescription}</TableCell>
           <TableCell>{sentDescription}</TableCell>
