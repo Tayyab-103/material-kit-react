@@ -19,27 +19,28 @@ import TablePagination from '@mui/material/TablePagination';
 import Typography from '@mui/material/Typography';
 
 import { getClients } from 'src/store/thunk/client.thunk';
-import { deleteLeads, getLeads } from 'src/store/thunk/lead.thunk';
 import { getMembers } from 'src/store/thunk/member.thunk';
+import { deleteTask, getTask } from 'src/store/thunk/task.thunk';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
-import LeadTableHead from '../lead-table-head';
-import LeadTableRow from '../lead-table-row';
-import LeadTableToolbar from '../lead-table-toolbar';
+import TaskTableHead from '../task-table-head';
+import TaskTableRow from '../task-table-row';
+import TaskTableToolbar from '../task-table-toolbar';
 import TableEmptyRows from '../table-empty-rows';
 import TableNoData from '../table-no-data';
+import TaskModal from './TaskModal';
 import { applyFilter, emptyRows, getComparator } from '../utils';
-import LeadModal from './LeadModal';
 import Loader from 'src/components/loader/Loader';
+import { getLeads } from 'src/store/thunk/lead.thunk';
 
 // ----------------------------------------------------------------------
 
-export default function LeadPage() {
+export default function TaskPage() {
   const dispatch = useDispatch();
-  const { leads } = useSelector((state) => state.lead.data);
-  // console.log(leads, ' Hello==== LeadsData');
+  const { tasks } = useSelector((state) => state.task.data);
+  // console.log(tasks, ' Hello==== LeadsData');
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -53,8 +54,9 @@ export default function LeadPage() {
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
   const [members, setMembers] = useState([]);
   const [clients, setClients] = useState([]);
-  const [leadProp, setLeadProp] = useState({});
-  const [leadId, setLeadId] = useState('');
+  const [leads, setLeads] = useState([]);
+  const [taskProp, setTaskProp] = useState({});
+  const [taskId, setTaskId] = useState('');
   const [deleteId, setDeleteId] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -63,9 +65,11 @@ export default function LeadPage() {
     dispatch(getMembers()).then((res) => {
       setMembers(res.payload);
     });
-
     dispatch(getClients()).then((res) => {
       setClients(res.payload);
+    });
+    dispatch(getLeads()).then((res) => {
+      setLeads(res.payload);
     });
   };
 
@@ -81,18 +85,14 @@ export default function LeadPage() {
   const handleConfirmDelete = async () => {
     try {
       setIsLoading(true);
-      await dispatch(deleteLeads(deleteId));
-      await dispatch(getLeads());
-
-      // Display success toast
-      toast.success('Lead Deleted Successfully');
-
-      // Close confirmation modal
+      await dispatch(deleteTask(deleteId));
+      await dispatch(getTask());
+      toast.success('Task Deleted Successfully');
       setIsDeleteConfirmationOpen(false);
       setIsLoading(false);
     } catch (error) {
       // Display error toast
-      toast.error('Error Deleting Lead');
+      toast.error('Error Deleting Task');
       setIsLoading(false);
     }
   };
@@ -102,8 +102,9 @@ export default function LeadPage() {
   };
 
   const handleClickUpdate = (id, value) => {
-    setLeadId(id);
-    setLeadProp(value);
+    setTaskId(id);
+    setTaskProp(value);
+    // console.log("Update,", value);
     setIsModalOpen(true);
     dispatch(getMembers()).then((res) => {
       setMembers(res.payload);
@@ -111,26 +112,23 @@ export default function LeadPage() {
     dispatch(getClients()).then((res) => {
       setClients(res.payload);
     });
+    dispatch(getLeads()).then((res) => {
+      setLeads(res.payload);
+    });
   };
-
-  // useEffect(() => {
-  //   dispatch(getLeads());
-  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        await dispatch(getLeads());
+        await dispatch(getTask());
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
         toast.error('Error fetching clients');
       }
     };
-
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSort = (event, id) => {
@@ -143,7 +141,7 @@ export default function LeadPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = leads.map((n) => n.name);
+      const newSelecteds = tasks.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -184,12 +182,12 @@ export default function LeadPage() {
 
   useEffect(() => {
     const filteredData = applyFilter({
-      inputData: leads,
+      inputData: tasks,
       comparator: getComparator(order, orderBy),
       filterName,
     });
     setDataFiltered(filteredData);
-  }, [leads, order, orderBy, filterName]);
+  }, [tasks, order, orderBy, filterName]);
 
   const notFound = !dataFiltered.length && !!filterName;
 
@@ -203,19 +201,20 @@ export default function LeadPage() {
   }
   return (
     <Container>
-      <LeadModal
+      <TaskModal
         isOpen={isModalOpen}
-        members={members}
-        clients={clients}
         onClose={() => setIsModalOpen(false)}
         onBack={handleBack}
-        leadProp={leadProp}
-        leadId={leadId}
+        members={members}
+        clients={clients}
+        leads={leads}
+        taskProp={taskProp}
+        taskId={taskId}
       />
       <Dialog open={isDeleteConfirmationOpen} onClose={handleCancelDelete}>
-        <DialogTitle>Delete Lead</DialogTitle>
+        <DialogTitle>Delete Task</DialogTitle>
         <DialogContent>
-          <DialogContentText>Are you sure you want to delete this lead?</DialogContentText>
+          <DialogContentText>Are you sure you want to delete this task?</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelDelete}>Cancel</Button>
@@ -225,7 +224,7 @@ export default function LeadPage() {
         </DialogActions>
       </Dialog>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Leads</Typography>
+        <Typography variant="h4">Task</Typography>
 
         <Button
           variant="contained"
@@ -233,12 +232,12 @@ export default function LeadPage() {
           startIcon={<Iconify icon="eva:plus-fill" />}
           onClick={handleModalClick}
         >
-          New Lead
+          New Task
         </Button>
       </Stack>
 
       <Card>
-        <LeadTableToolbar
+        <TaskTableToolbar
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
@@ -247,24 +246,28 @@ export default function LeadPage() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <LeadTableHead
+              <TaskTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={leads.length}
+                rowCount={tasks.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
                   { id: 'name', label: 'Name' },
-                  { id: 'date', label: 'Date' },
-                  { id: 'salesTeamMember', label: 'Sales TeamMember' },
+                  { id: 'lead', label: 'Lead' },
                   { id: 'client', label: 'Client' },
-                  { id: 'appointment', label: 'Appointment' },
-                  { id: 'leadStatus', label: 'Lead Status' },
-                  { id: 'linkJobApplied', label: 'Link Job Applied' },
-                  { id: 'jobDescription', label: 'Job Description' },
-                  { id: 'sentDescription', label: 'sentDescription' },
-                  { id: 'call', label: 'Call' },
+                  { id: 'salesMember', label: 'Sales Member' },
+                  { id: 'taskStartDate', label: 'Task Start Date' },
+                  { id: 'taskEndDate', label: 'Task End Date' },
+                  { id: 'isCompleted', label: 'IsCompleted' },
+                  { id: 'taskSupervisor', label: ' Task Supervisor' },
+                  { id: 'taskDiscription', label: ' Task Discription' },
+                  { id: 'taskSideNote', label: 'Task Side Note' },
+                  { id: 'taskLink1', label: 'Task Link1' },
+                  { id: 'taskLink2', label: 'Task Link2' },
+                  { id: 'taskLink3', label: 'Task Link3' },
+                  { id: 'taskTechResources', label: 'Task Tech Resources' },
                   { id: 'actions', label: 'Actions', align: 'center' },
                 ]}
               />
@@ -276,33 +279,58 @@ export default function LeadPage() {
                     dataFiltered
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row) => (
-                        <LeadTableRow
+                        <TaskTableRow
                           key={row._id}
                           name={row.name}
-                          date={formatDateString(row?.date)}
-                          salesTeamMember={row?.salesTeamMember?.name ?? 'N/A'}
+                          lead={row?.lead?.name ?? "N/A"}
                           client={row?.client?.name ?? 'N/A'}
-                          appointment={formatDateString(row?.appointment)}
-                          leadStatus={row?.leadStatus}
-                          linkJobApplied={row?.linkJobApplied}
-                          jobDescription={row?.jobDescription}
-                          sentDescription={row?.sentDescription}
-                          call={formatDateString(row?.call)}
+                          salesMember={row?.salesMember?.role ?? "N/A"}
+                          taskStartDate={formatDateString(row?.taskStartDate)}
+                          taskEndDate={formatDateString(row?.taskEndDate)}
+                          isCompleted={row?.isCompleted ? "True" : "False"}
+                          taskSupervisor={row?.taskSupervisor?.name ?? "N/A"}
+                          taskDiscription={row?.taskDiscription}
+                          taskSideNote={row?.taskSideNote}
+                          taskLink1={row?.taskLink1}
+                          taskLink2={row?.taskLink2}
+                          taskLink3={row?.taskLink3}
+                          taskTechResources={row?.taskTechResources?.length
+                            ? row.taskTechResources.map(
+                                (resource, index) => (
+                                  <span key={index}>
+                                    {resource.name}
+                                    {index <
+                                      row.taskTechResources
+                                        .length -
+                                        1 && ", "}
+                                  </span>
+                                )
+                              )
+                            : "N/A"}
                           selected={selected.indexOf(row.name) !== -1}
                           handleClick={(event) => handleClick(event, row.name)}
                           handleClickDelete={() => handleClickDelete(row._id)}
                           handleClickUpdate={() =>
                             handleClickUpdate(row._id, {
                               name: row?.name,
-                              date: row?.date,
-                              salesTeamMember: row?.salesTeamMember?._id,
+                              lead: row?.lead?._id,
                               client: row?.client?._id,
-                              linkJobApplied: row?.linkJobApplied,
-                              jobDescription: row?.jobDescription,
-                              sentDescription: row?.sentDescription,
-                              appointment: row?.appointment,
-                              call: row?.call,
-                              leadStatus: row?.leadStatus,
+                              salesMember: row?.salesMember?._id,
+                              taskDiscription: row?.taskDiscription,
+                              taskSideNote: row?.taskSideNote,
+                              taskStartDate: row?.taskStartDate,
+                              taskEndDate: row?.taskEndDate,
+                              taskSupervisor: row?.taskSupervisor?._id,
+                              taskTechResources: row?.taskTechResources?.map(
+                                (resource) => ({
+                                  label: resource?.name,
+                                  value: resource?._id,
+                                  // isFixed: true
+                                })
+                              ),
+                              taskLink1: row?.taskLink1,
+                              taskLink2: row?.taskLink2,
+                              taskLink3: row?.taskLink3,
                             })
                           }
                         />
@@ -310,7 +338,7 @@ export default function LeadPage() {
 
                   <TableEmptyRows
                     height={77}
-                    emptyRows={emptyRows(page, rowsPerPage, leads.length)}
+                    emptyRows={emptyRows(page, rowsPerPage, tasks.length)}
                   />
 
                   {notFound && <TableNoData query={filterName} />}
@@ -323,7 +351,7 @@ export default function LeadPage() {
         <TablePagination
           page={page}
           component="div"
-          count={leads.length}
+          count={tasks.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}

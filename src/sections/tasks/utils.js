@@ -50,7 +50,7 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
     if (filterName) {
       inputData = inputData.filter(
-        (leads) => leads.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+        (tasks) => tasks.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
       );
     }
 

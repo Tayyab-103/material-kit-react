@@ -193,7 +193,7 @@ const ProjectModal = ({ isOpen, onClose, onSave, editData, edit }) => {
         justifyContent: 'center',
       }}
     >
-      <div
+      <Box
         style={{
           backgroundColor: 'white',
           padding: '20px',
@@ -496,17 +496,17 @@ const ProjectModal = ({ isOpen, onClose, onSave, editData, edit }) => {
               <Field type="text" name="cost" placeholder="Cost" style={inputStyle} />
               <ErrorMessage name="cost" component="p" style={errorStyle} />
             </FormControl>
-            <div style={{ marginTop: '20px' }}>
+            <Box style={{ marginTop: '20px' }}>
               <Button variant="contained" color="primary" type="submit">
                 Submit
               </Button>
               <Button onClick={handleModalClose} style={{ marginLeft: '10px' }}>
                 Back
               </Button>
-            </div>
+            </Box>
           </Form>
         </Formik>
-      </div>
+      </Box>
     </Modal>
   );
 };

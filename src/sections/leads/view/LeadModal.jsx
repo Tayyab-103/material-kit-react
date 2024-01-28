@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { Form, Field, Formik, ErrorMessage } from 'formik';
 
 import {
+  Box,
   Modal,
   Button,
   FormLabel,
@@ -68,7 +69,7 @@ const LeadModal = ({ isOpen, onClose, onBack, members, clients, leadProp, leadId
         justifyContent: 'center',
       }}
     >
-       <div
+       <Box
         style={{
           backgroundColor: 'white',
           padding: '20px',
@@ -210,17 +211,17 @@ const LeadModal = ({ isOpen, onClose, onBack, members, clients, leadProp, leadId
               </Field>
               <ErrorMessage name="leadStatus" component="p" style={errorStyle} />
             </FormControl>
-            <div style={{ marginTop: '20px' }}>
+            <Box style={{ marginTop: '20px' }}>
               <Button variant="contained" color="primary" type="submit">
                 Submit
               </Button>
               <Button onClick={onBack} style={{ marginLeft: '10px' }}>
                 Back
               </Button>
-            </div>
+            </Box>
           </Form>
         </Formik>
-      </div>
+      </Box>
     </Modal>
   );
 };

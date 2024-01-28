@@ -11,7 +11,7 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function LeadTableToolbar({ numSelected, filterName, onFilterName }) {
+export default function TaskTableToolbar({ numSelected, filterName, onFilterName }) {
   return (
     <Toolbar
       sx={{
@@ -62,7 +62,7 @@ export default function LeadTableToolbar({ numSelected, filterName, onFilterName
   );
 }
 
-LeadTableToolbar.propTypes = {
+TaskTableToolbar.propTypes = {
   numSelected: PropTypes.number,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,

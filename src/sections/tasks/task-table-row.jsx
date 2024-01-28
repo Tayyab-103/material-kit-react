@@ -16,18 +16,22 @@ import Label from 'src/components/label';
 
 // ----------------------------------------------------------------------
 
-export default function LeadTableRow({
+export default function TaskTableRow({
   selected,
   name,
-  date,
-  salesTeamMember,
+  lead,
   client,
-  appointment,
-  leadStatus,
-  linkJobApplied,
-  jobDescription,
-  sentDescription,
-  call,
+  salesMember,
+  taskStartDate,
+  taskEndDate,
+  isCompleted,
+  taskSupervisor,
+  taskDiscription,
+  taskSideNote,
+  taskLink1,
+  taskLink2,
+  taskLink3,
+  taskTechResources,
   handleClick,
   handleClickDelete,
   handleClickUpdate,
@@ -59,41 +63,36 @@ export default function LeadTableRow({
             </Stack>
           </TableCell>
 
-          <TableCell component="th" scope="row" padding="none">
-            <Stack direction="row" alignItems="center" spacing={2}>
-              {/* <Avatar alt={name} src={avatarUrl} /> */}
-              <Typography variant="subtitle3" noWrap>
-                {date}
-              </Typography>
-            </Stack>
-          </TableCell>
+          <TableCell>{lead}</TableCell>
 
-          {/* <TableCell>{date}</TableCell> */}
-
-          <TableCell>{salesTeamMember}</TableCell>
           <TableCell>{client}</TableCell>
-          <TableCell>{appointment}</TableCell>
-
-          <TableCell>
-            <Label
-              color={leadStatus === 'HOT' ? 'error' : leadStatus === 'COLD' ? 'info' : 'success'}
-            >
-              {leadStatus}
-            </Label>
-          </TableCell>
-          {/* <TableCell>{leadStatus}</TableCell> */}
-          <TableCell>{linkJobApplied}</TableCell>
-          <TableCell>{jobDescription}</TableCell>
-          <TableCell>{sentDescription}</TableCell>
-          <TableCell component="th" scope="row" padding="none">
+          <TableCell>{salesMember}</TableCell>
+          {/* <TableCell>{taskStartDate}</TableCell> */}
+          <TableCell component="th" scope="row">
             <Stack direction="row" alignItems="center" spacing={2}>
-              {/* <Avatar alt={name} src={avatarUrl} /> */}
               <Typography variant="subtitle3" noWrap>
-                {call}
+                {taskStartDate}
               </Typography>
             </Stack>
           </TableCell>
-
+          <TableCell component="th" scope="row">
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Typography variant="subtitle3" noWrap>
+                {taskEndDate}
+              </Typography>
+            </Stack>
+          </TableCell>
+          {/* <TableCell>{taskEndDate}</TableCell> */}
+          <TableCell>
+          <Label color={(isCompleted === 'False' && 'error') || 'success'}>{isCompleted}</Label>
+        </TableCell>
+          <TableCell>{taskSupervisor}</TableCell>
+          <TableCell>{taskDiscription}</TableCell>
+          <TableCell>{taskSideNote}</TableCell>
+          <TableCell>{taskLink1}</TableCell>
+          <TableCell>{taskLink2}</TableCell>
+          <TableCell>{taskLink3}</TableCell>
+          <TableCell>{taskTechResources}</TableCell>
           <TableCell align="right">
             <IconButton onClick={handleOpenMenu}>
               <Iconify icon="eva:more-vertical-fill" />
@@ -125,20 +124,24 @@ export default function LeadTableRow({
   );
 }
 
-LeadTableRow.propTypes = {
+TaskTableRow.propTypes = {
   // avatarUrl: PropTypes.any,
   handleClick: PropTypes.func,
   handleClickUpdate: PropTypes.func,
   handleClickDelete: PropTypes.func,
   name: PropTypes.any,
-  date: PropTypes.any,
-  salesTeamMember: PropTypes.any,
+  lead: PropTypes.any,
   client: PropTypes.any,
-  linkJobApplied: PropTypes.any,
-  jobDescription: PropTypes.any,
-  sentDescription: PropTypes.any,
-  appointment: PropTypes.any,
-  call: PropTypes.any,
-  leadStatus: PropTypes.any,
+  salesMember: PropTypes.string,
+  taskStartDate: PropTypes.any,
+  taskEndDate: PropTypes.any,
+  isCompleted: PropTypes.any,
+  taskSupervisor: PropTypes.any,
+  taskDiscription: PropTypes.any,
+  taskSideNote: PropTypes.any,
+  taskLink1: PropTypes.any,
+  taskLink2: PropTypes.any,
+  taskLink3: PropTypes.any,
+  taskTechResources: PropTypes.string,
   selected: PropTypes.any,
 };

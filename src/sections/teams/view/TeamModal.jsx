@@ -5,11 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Form, Field, Formik, ErrorMessage } from 'formik';
 
 import {
+  Box,
   Modal,
   Button,
-  MenuItem,
   FormLabel,
-  TextField,
   Typography,
   FormControl,
   //   Select as MUISelect,
@@ -138,7 +137,7 @@ const TeamModal = ({ isOpen, onClose, teams, onSave, editData, edit }) => {
         justifyContent: 'center',
       }}
     >
-      <div
+      <Box
         style={{
           backgroundColor: 'white',
           padding: '20px',
@@ -260,17 +259,17 @@ const TeamModal = ({ isOpen, onClose, teams, onSave, editData, edit }) => {
               <ErrorMessage name="projects" component="p" style={errorStyle} />
             </FormControl>
 
-            <div style={{ marginTop: '20px' }}>
+            <Box style={{ marginTop: '20px' }}>
               <Button variant="contained" color="primary" type="submit">
                 Submit
               </Button>
               <Button onClick={handleModalClose} style={{ marginLeft: '10px' }}>
                 Back
               </Button>
-            </div>
+            </Box>
           </Form>
         </Formik>
-      </div>
+      </Box>
     </Modal>
   );
 };

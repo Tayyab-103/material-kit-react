@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { Form, Field, Formik, ErrorMessage } from 'formik';
 
 import {
+  Box,
   Modal,
   Button,
   Select,
@@ -60,7 +61,7 @@ const DepartmentModal = ({ isOpen, onClose, onBack, members, formProp, departmen
         justifyContent: 'center',
       }}
     >
-      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px' }}>
+      <Box style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px' }}>
         <Typography variant="h6" id="modal-title">
           {isUpdateMode ? 'Edit Department' : 'Add Department'}
         </Typography>
@@ -109,17 +110,17 @@ const DepartmentModal = ({ isOpen, onClose, onBack, members, formProp, departmen
               <ErrorMessage name="departmentHead" component="div" style={{ color: 'red' }} />
             </FormControl>
 
-            <div style={{ marginTop: '20px' }}>
+            <Box style={{ marginTop: '20px' }}>
               <Button variant="contained" color="primary" type="submit">
                 Submit
               </Button>
               <Button onClick={onBack} style={{ marginLeft: '10px' }}>
                 Back
               </Button>
-            </div>
+            </Box>
           </Form>
         </Formik>
-      </div>
+      </Box>
     </Modal>
   );
 };

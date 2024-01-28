@@ -6,6 +6,7 @@ import Select from 'react-select';
 import { toast } from 'react-toastify';
 
 import {
+  Box,
   Button,
   FormControl,
   FormLabel,
@@ -127,7 +128,7 @@ const MemberModal = ({ isOpen, onClose, members, onSave, editData, edit }) => {
         justifyContent: 'center',
       }}
     >
-      <div
+      <Box
         style={{
           backgroundColor: 'white',
           padding: '20px',
@@ -312,17 +313,17 @@ const MemberModal = ({ isOpen, onClose, members, onSave, editData, edit }) => {
               />
             </FormControl>
 
-            <div style={{ marginTop: '20px' }}>
+            <Box style={{ marginTop: '20px' }}>
               <Button variant="contained" color="primary" type="submit">
                 Submit
               </Button>
               <Button onClick={handleModalClose} style={{ marginLeft: '10px' }}>
                 Back
               </Button>
-            </div>
+            </Box>
           </Form>
         </Formik>
-      </div>
+      </Box>
     </Modal>
   );
 };

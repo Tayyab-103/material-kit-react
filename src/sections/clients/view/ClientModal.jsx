@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Field, Formik, ErrorMessage } from 'formik';
 
-import { Modal, Button, FormLabel, Typography, FormControl } from '@mui/material';
+import {Box, Modal, Button, FormLabel, Typography, FormControl } from '@mui/material';
 
 import { addClients, getClients, updateClients } from 'src/store/thunk/client.thunk';
 
@@ -80,7 +80,7 @@ const ClientModal = ({ isOpen, onClose, onBack, clientProp, clientId }) => {
         justifyContent: 'center',
       }}
     >
-      <div
+      <Box
         style={{
           backgroundColor: 'white',
           padding: '20px',
@@ -196,17 +196,17 @@ const ClientModal = ({ isOpen, onClose, onBack, clientProp, clientId }) => {
               <ErrorMessage name="contactPlatformLink2" component="p" style={errorStyle} />
             </FormControl>
 
-            <div style={{ marginTop: '20px' }}>
+            <Box style={{ marginTop: '20px' }}>
               <Button variant="contained" color="primary" type="submit">
                 Submit
               </Button>
               <Button onClick={onBack} style={{ marginLeft: '10px' }}>
                 Back
               </Button>
-            </div>
+            </Box>
           </Form>
         </Formik>
-      </div>
+      </Box>
     </Modal>
   );
 };
