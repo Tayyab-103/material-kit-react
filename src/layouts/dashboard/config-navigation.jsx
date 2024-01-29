@@ -151,7 +151,12 @@ const navConfig = [
     title: 'Earning',
     path: '/earning',
     icon: <MonetizationOnIcon />, 
-  }
+  },
+  // {
+  //   title: 'Reset Password',
+  //   path: '/forget-password/verify',
+  //   icon: <MonetizationOnIcon />, 
+  // }
 ];
 
 export default navConfig;

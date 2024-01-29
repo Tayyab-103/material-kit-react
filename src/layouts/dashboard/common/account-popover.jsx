@@ -1,5 +1,7 @@
-/* eslint-disable */
+// /* eslint-disable */
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -14,30 +16,26 @@ import { account } from 'src/_mock/account';
 
 import { clearUser } from '../../../store/reducer/auth.reducer';
 
-import { useDispatch } from 'react-redux';
-
-import { useNavigate } from 'react-router-dom';
-
 // ----------------------------------------------------------------------
 
-const MENU_OPTIONS = [
-  // {
-  //   label: 'Home',
-  //   icon: 'eva:home-fill',
-  // },
-  // {
-  //   label: 'Profile',
-  //   icon: 'eva:person-fill',
-  // },
-  // {
-  //   label: 'Settings',
-  //   icon: 'eva:settings-2-fill',
-  // },
-  {
-    label: 'Reset Password',
-    icon: 'eva:settings-2-fill',
-  },
-];
+// const MENU_OPTIONS = [
+//   // {
+//   //   label: 'Home',
+//   //   icon: 'eva:home-fill',
+//   // },
+//   // {
+//   //   label: 'Profile',
+//   //   icon: 'eva:person-fill',
+//   // },
+//   // {
+//   //   label: 'Settings',
+//   //   icon: 'eva:settings-2-fill',
+//   // },
+//   {
+//     label: 'Reset Password',
+//     icon: 'eva:settings-2-fill',
+//   },
+// ];
 
 // ----------------------------------------------------------------------
 
@@ -112,14 +110,25 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        {MENU_OPTIONS.map((option) => (
+        {/* {MENU_OPTIONS.map((option) => (
           <MenuItem key={option.label} onClick={handleClose}>
             {option.label}
           </MenuItem>
-        ))}
+        ))} */}
 
         <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
 
+        <MenuItem
+          disableRipple
+          disableTouchRipple
+          // onClick={handleClose}
+          sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+          onClick={()=>{
+            navigate("/forget-password/verify")
+          }}
+        >
+          Reset Password
+        </MenuItem>
         <MenuItem
           disableRipple
           disableTouchRipple

@@ -11,7 +11,6 @@ import {
   DialogTitle,
   DialogActions,
   DialogContent,
-  DialogContentText,
 } from '@mui/material';
 
 const EmailModal = ({ isOpen, onClose, onSubmit }) => {
@@ -33,15 +32,14 @@ const EmailModal = ({ isOpen, onClose, onSubmit }) => {
   };
 
   return (
-    <Dialog open={isOpen} onClose={onClose}>
+    <Dialog open={isOpen} onClose={onClose} fullWidth margin="normal">
       <DialogTitle>Forget Password</DialogTitle>
       <DialogContent>
-        <DialogContentText>Enter your Email</DialogContentText>
-        <FormControl>
+        <FormControl fullWidth margin="normal">
           <FormLabel>Email</FormLabel>
           <Input
             type="email"
-            placeholder="Enter your email"
+            placeholder="Enter your existing email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />

@@ -16,6 +16,7 @@ export const ClientPage = lazy(() => import('src/pages/client'));
 export const TaskPage = lazy(() => import('src/pages/task'));
 export const PayrollPage = lazy(() => import('src/pages/payroll'));
 export const EarningPage = lazy(() => import('src/pages/earning'));
+export const PasswordResetPage = lazy(() => import('src/pages/passwordReset'));
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
@@ -44,6 +45,7 @@ export default function Router() {
         { path: 'task', element: <TaskPage /> },
         { path: 'payroll', element: <PayrollPage /> },
         { path: 'earning', element: <EarningPage /> },
+        { path: 'forget-password/verify', element: <PasswordResetPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
       ],
