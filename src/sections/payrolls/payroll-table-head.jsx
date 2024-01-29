@@ -11,7 +11,7 @@ import { visuallyHidden } from './utils';
 
 // ----------------------------------------------------------------------
 
-export default function LeadTableHead({
+export default function PayrollTableHead({
   order,
   orderBy,
   rowCount,
@@ -62,7 +62,7 @@ export default function LeadTableHead({
   );
 }
 
-LeadTableHead.propTypes = {
+PayrollTableHead.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']),
   orderBy: PropTypes.string,
   rowCount: PropTypes.number,

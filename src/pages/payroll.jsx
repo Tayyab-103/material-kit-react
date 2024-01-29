@@ -1,18 +1,18 @@
 import { Helmet } from 'react-helmet-async';
 
-import { TaskView } from 'src/sections/tasks/view';
+import { PayrollView } from 'src/sections/payrolls/view';
 
 
 // ----------------------------------------------------------------------
 
-export default function TaskPage() {
+export default function PayrollPage() {
   return (
     <>
       <Helmet>
-        <title>TDC | Task Table </title>
+        <title>TDC | PayRoll Table </title>
       </Helmet>
 
-      <TaskView />
+      <PayrollView />
     </>
   );
 }

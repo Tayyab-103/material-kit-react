@@ -5,7 +5,7 @@ import { DepartmentView } from 'src/sections/departments/view';
 
 // ----------------------------------------------------------------------
 
-export default function MemberPage() {
+export default function departmentPage() {
   return (
     <>
       <Helmet>

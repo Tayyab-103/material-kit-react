@@ -1,1 +1,1 @@
-export { default as LeadView } from './lead-view';
+export { default as PayrollView } from './payroll-view';

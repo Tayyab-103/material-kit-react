@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-// authReducer.js
 import { createSlice } from "@reduxjs/toolkit";
 
 import { getMembers } from "../thunk/member.thunk";

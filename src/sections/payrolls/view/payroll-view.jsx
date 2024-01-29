@@ -1,45 +1,45 @@
 /* eslint-disable */
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import Container from '@mui/material/Container';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
+import Typography from '@mui/material/Typography';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-import Typography from '@mui/material/Typography';
+import DialogContentText from '@mui/material/DialogContentText';
 
-import { getClients } from 'src/store/thunk/client.thunk';
-import { deleteLeads, getLeads } from 'src/store/thunk/lead.thunk';
 import { getMembers } from 'src/store/thunk/member.thunk';
+import { getDepartments } from 'src/store/thunk/department.thunk';
+import { getPayRoll, deletePayRoll } from 'src/store/thunk/payroll.thunk';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
-
-import LeadTableHead from '../lead-table-head';
-import LeadTableRow from '../lead-table-row';
-import LeadTableToolbar from '../lead-table-toolbar';
-import TableEmptyRows from '../table-empty-rows';
-import TableNoData from '../table-no-data';
-import { applyFilter, emptyRows, getComparator } from '../utils';
-import LeadModal from './LeadModal';
 import Loader from 'src/components/loader/Loader';
+
+import PayrollModal from './PayrollModal';
+import TableNoData from '../table-no-data';
+import TableEmptyRows from '../table-empty-rows';
+import PayrollTableRow from '../payroll-table-row';
+import PayrollTableHead from '../payroll-table-head';
+import PayrollTableToolbar from '../payroll-table-toolbar';
+import { emptyRows, applyFilter, getComparator } from '../utils';
 
 // ----------------------------------------------------------------------
 
-export default function LeadPage() {
+export default function PayrollPage() {
   const dispatch = useDispatch();
-  const { leads } = useSelector((state) => state.lead.data);
-  // console.log(leads, ' Hello==== LeadsData');
+  const { payrolls } = useSelector((state) => state.payroll.data);
+  // console.log(payrolls, ' Hello==== LeadsData');
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -52,9 +52,9 @@ export default function LeadPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
   const [members, setMembers] = useState([]);
-  const [clients, setClients] = useState([]);
-  const [leadProp, setLeadProp] = useState({});
-  const [leadId, setLeadId] = useState('');
+  const [departments, setDepartments] = useState([]);
+  const [payrollProp, setPayrollProp] = useState({});
+  const [payrollId, setPayrollId] = useState("");
   const [deleteId, setDeleteId] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -63,9 +63,8 @@ export default function LeadPage() {
     dispatch(getMembers()).then((res) => {
       setMembers(res.payload);
     });
-
-    dispatch(getClients()).then((res) => {
-      setClients(res.payload);
+    dispatch(getDepartments()).then((res) => {
+      setDepartments(res.payload);
     });
   };
 
@@ -81,18 +80,14 @@ export default function LeadPage() {
   const handleConfirmDelete = async () => {
     try {
       setIsLoading(true);
-      await dispatch(deleteLeads(deleteId));
-      await dispatch(getLeads());
-
-      // Display success toast
-      toast.success('Lead Deleted Successfully');
-
-      // Close confirmation modal
+      await dispatch(deletePayRoll(deleteId));
+      await dispatch(getPayRoll());
+      toast.success("Task Deleted Successfully");
       setIsDeleteConfirmationOpen(false);
       setIsLoading(false);
     } catch (error) {
       // Display error toast
-      toast.error('Error Deleting Lead');
+      toast.error("Error Deleting Task");
       setIsLoading(false);
     }
   };
@@ -102,35 +97,29 @@ export default function LeadPage() {
   };
 
   const handleClickUpdate = (id, value) => {
-    setLeadId(id);
-    setLeadProp(value);
+    setPayrollId(id);
+    setPayrollProp(value);
     setIsModalOpen(true);
     dispatch(getMembers()).then((res) => {
       setMembers(res.payload);
     });
-    dispatch(getClients()).then((res) => {
-      setClients(res.payload);
+    dispatch(getDepartments()).then((res) => {
+      setDepartments(res.payload);
     });
   };
-
-  // useEffect(() => {
-  //   dispatch(getLeads());
-  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        await dispatch(getLeads());
+        await dispatch(getPayRoll());
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
-        toast.error('Error fetching clients');
+        toast.error("Error fetching clients");
       }
     };
-
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSort = (event, id) => {
@@ -143,7 +132,7 @@ export default function LeadPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = leads.map((n) => n.name);
+      const newSelecteds = payrolls?.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -184,38 +173,30 @@ export default function LeadPage() {
 
   useEffect(() => {
     const filteredData = applyFilter({
-      inputData: leads,
+      inputData: payrolls,
       comparator: getComparator(order, orderBy),
       filterName,
     });
     setDataFiltered(filteredData);
-  }, [leads, order, orderBy, filterName]);
+  }, [payrolls, order, orderBy, filterName]);
 
   const notFound = !dataFiltered.length && !!filterName;
 
-  function formatDateString(dateString) {
-    const date = new Date(dateString);
-    const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}/
-                        ${date.getDate().toString().padStart(2, '0')}/
-                        ${date.getFullYear()}`;
-
-    return formattedDate;
-  }
   return (
     <Container>
-      <LeadModal
+      <PayrollModal
         isOpen={isModalOpen}
         members={members}
-        clients={clients}
+        departments={departments}
         onClose={() => setIsModalOpen(false)}
         onBack={handleBack}
-        leadProp={leadProp}
-        leadId={leadId}
+        payrollProp={payrollProp}
+        payrollId={payrollId}
       />
       <Dialog open={isDeleteConfirmationOpen} onClose={handleCancelDelete}>
-        <DialogTitle>Delete Lead</DialogTitle>
+        <DialogTitle>Delete PayRoll</DialogTitle>
         <DialogContent>
-          <DialogContentText>Are you sure you want to delete this lead?</DialogContentText>
+          <DialogContentText>Are you sure you want to delete this payroll?</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelDelete}>Cancel</Button>
@@ -225,7 +206,7 @@ export default function LeadPage() {
         </DialogActions>
       </Dialog>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Leads</Typography>
+        <Typography variant="h4">PayRolls</Typography>
 
         <Button
           variant="contained"
@@ -233,12 +214,12 @@ export default function LeadPage() {
           startIcon={<Iconify icon="eva:plus-fill" />}
           onClick={handleModalClick}
         >
-          New Lead
+          New PayRoll
         </Button>
       </Stack>
 
       <Card>
-        <LeadTableToolbar
+        <PayrollTableToolbar
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
@@ -247,24 +228,22 @@ export default function LeadPage() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <LeadTableHead
+              <PayrollTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={leads.length}
+                rowCount={payrolls.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'date', label: 'Date' },
-                  { id: 'salesTeamMember', label: 'Sales TeamMember' },
-                  { id: 'client', label: 'Client' },
-                  { id: 'appointment', label: 'Appointment' },
-                  { id: 'leadStatus', label: 'Lead Status' },
-                  { id: 'linkJobApplied', label: 'Link Job Applied' },
-                  { id: 'jobDescription', label: 'Job Description' },
-                  { id: 'sentDescription', label: 'sentDescription' },
-                  { id: 'call', label: 'Call' },
+                  { id: 'member', label: 'Member' },
+                  { id: 'department', label: 'Department' },
+                  { id: 'accountTitle', label: 'AccountTitle' },
+                  { id: 'cnic', label: 'CNIC' },
+                  { id: 'accountNo', label: 'Account No' },
+                  { id: 'netSalary', label: 'Net Salary' },
+                  { id: 'month', label: 'Month' },
+                  { id: 'year', label: 'Year' },
                   { id: 'actions', label: 'Actions', align: 'center' },
                 ]}
               />
@@ -276,33 +255,26 @@ export default function LeadPage() {
                     dataFiltered
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row) => (
-                        <LeadTableRow
+                        <PayrollTableRow
                           key={row._id}
-                          name={row.name}
-                          date={formatDateString(row?.date)}
-                          salesTeamMember={row?.salesTeamMember?.name ?? 'N/A'}
-                          client={row?.client?.name ?? 'N/A'}
-                          appointment={formatDateString(row?.appointment)}
-                          leadStatus={row?.leadStatus}
-                          linkJobApplied={row?.linkJobApplied}
-                          jobDescription={row?.jobDescription}
-                          sentDescription={row?.sentDescription}
-                          call={formatDateString(row?.call)}
+                          member={row?.member?.name ?? "N/A"}
+                          department={row?.department?.name ?? "N/A"}
+                          accountTitle={row?.accountTitle}
+                          cnic={row?.cnic}
+                          accountNo={row?.accountNo}
+                          netSalary={row?.netSalary ? `${row?.netSalary}$` : "N/A"}
+                          month={row?.month}
+                          year={row?.year}
                           selected={selected.indexOf(row.name) !== -1}
                           handleClick={(event) => handleClick(event, row.name)}
                           handleClickDelete={() => handleClickDelete(row._id)}
                           handleClickUpdate={() =>
                             handleClickUpdate(row._id, {
-                              name: row?.name,
-                              date: row?.date,
-                              salesTeamMember: row?.salesTeamMember?._id,
-                              client: row?.client?._id,
-                              linkJobApplied: row?.linkJobApplied,
-                              jobDescription: row?.jobDescription,
-                              sentDescription: row?.sentDescription,
-                              appointment: row?.appointment,
-                              call: row?.call,
-                              leadStatus: row?.leadStatus,
+                              member: row?.member?._id,
+                              department: row?.department?._id,
+                              accountTitle: row?.accountTitle,
+                              cnic: row?.cnic,
+                              accountNo: row?.accountNo,
                             })
                           }
                         />
@@ -310,7 +282,7 @@ export default function LeadPage() {
 
                   <TableEmptyRows
                     height={77}
-                    emptyRows={emptyRows(page, rowsPerPage, leads.length)}
+                    emptyRows={emptyRows(page, rowsPerPage, payrolls.length)}
                   />
 
                   {notFound && <TableNoData query={filterName} />}
@@ -323,7 +295,7 @@ export default function LeadPage() {
         <TablePagination
           page={page}
           component="div"
-          count={leads.length}
+          count={payrolls.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}
