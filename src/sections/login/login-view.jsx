@@ -25,10 +25,9 @@ import { bgGradient } from 'src/theme/css';
 import Iconify from 'src/components/iconify';
 import Logo from 'src/components/logo';
 
-
 import { ForgetPasswordUrl } from '../../API/Urls';
 import EmailModal from './EmailModal';
-
+import Loader from 'src/components/loader/Loader';
 
 // ----------------------------------------------------------------------
 
@@ -53,6 +52,8 @@ export default function LoginView() {
   const [email, setEmail] = useState('');
 
   const [password, setPassword] = useState('');
+
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (email) => {
     axios
@@ -90,15 +91,15 @@ export default function LoginView() {
       return;
     }
 
-    // setLoading(true);
-    dispatch(login({ email, password, navigate}))
+    setLoading(true);
+    dispatch(login({ email, password, navigate }))
       .then((res) => {
-        // setLoading(false);
+        setLoading(false);
       })
       .catch((error) => {
         console.error('Error', error);
         // toast.error(error?.response?.data?.message || "An error occurred");
-        // setLoading(false);
+        setLoading(false);
       });
   };
 
@@ -136,13 +137,26 @@ export default function LoginView() {
         <EmailModal isOpen={isModalOpen} onClose={handleCloseModal} onSubmit={handleSubmit} />
       </Stack>
 
+      {/* <Button
+        bg="blue"
+        fontSize="sm"
+        variant="brand"
+        fontWeight="500"
+        w="100%"
+        h="50"
+        mb="24px"
+        onClick={handleSignIn}
+        isDisabled={loading}
+      >
+        {loading ? <Loader size="20px" color="white" /> : 'Login'}
+      </Button> */}
+
       <LoadingButton
         fullWidth
         size="large"
         type="submit"
         variant="contained"
         color="inherit"
-        // onClick={handleClick}
         onClick={handleSignIn}
         sx={{
           backgroundColor: 'blue',

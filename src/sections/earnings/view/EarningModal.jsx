@@ -30,7 +30,7 @@ const EarningModal = ({
     if (earningProp?.projectsWorkedOn) {
       setSelected(earningProp?.projectsWorkedOn);
     }
-    console.log(earningProp?.projectsWorkedOn, 'Earning');
+    // console.log(earningProp?.projectsWorkedOn, 'Earning');
   }, [earningProp?.projectsWorkedOn]);
 
   const isUpdateMode = !!earningId;
